@@ -19,6 +19,9 @@ public class AutoColorPos extends LinearOpMode  {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+
+
         cam = new OpenCVManager(hardwareMap);
         CalibratePipeline calibratePipeline = new CalibratePipeline();
 
