@@ -34,6 +34,8 @@ public class AutoPipeLine extends OpenCvPipeline {
 
     int x = 0, y = 0, width = 0, height = 0;
 
+    private String prevLocText = "";
+
     public AutoPipeLine(Marker marker, Point targetLoc){
         this.marker = marker;
         this.targetLoc = targetLoc;
@@ -158,6 +160,24 @@ public class AutoPipeLine extends OpenCvPipeline {
                     4
             );
 
+            // Target point
+            Imgproc.circle(
+                    inputRaw,
+                    targetLoc,
+                    10,
+                    new Scalar(255, 0, 255)
+            );
+
+            Imgproc.putText(
+                    inputRaw,
+                    prevLocText,
+                    new Point(0, 40),
+                    Imgproc.FONT_HERSHEY_SIMPLEX,
+                    .75,
+                    new Scalar(120.0,100.0, 100.0),
+                    2
+            );
+
 
             return inputRaw;
         }
@@ -204,4 +224,8 @@ public class AutoPipeLine extends OpenCvPipeline {
         return x;
     }
     public int getY(){return y;}
+
+    public void setPrevLocText(String prevLocText) {
+        this.prevLocText = prevLocText;
+    }
 }
