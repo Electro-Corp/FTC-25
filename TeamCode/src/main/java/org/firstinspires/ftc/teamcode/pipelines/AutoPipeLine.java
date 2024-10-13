@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
+import android.media.audiofx.AcousticEchoCanceler;
+
 import org.apache.commons.math3.geometry.hull.ConvexHull;
 import org.firstinspires.ftc.teamcode.subsystems.Marker;
 import org.opencv.core.Core;
@@ -22,6 +24,7 @@ import java.util.Locale;
 
 public class AutoPipeLine extends OpenCvPipeline {
     private Marker marker;
+    private Point targetLoc;
     Mat hsvMat = new Mat(), hierarchyMat = new Mat(), hsvThresholdMat = new Mat(), erosionElement = new Mat(), dilationElement = new Mat(), cutOff = new Mat();
 
     //configurations
@@ -31,8 +34,11 @@ public class AutoPipeLine extends OpenCvPipeline {
 
     int x = 0, y = 0, width = 0, height = 0;
 
-    public AutoPipeLine(Marker marker){
+    private String prevLocText = "";
+
+    public AutoPipeLine(Marker marker, Point targetLoc){
         this.marker = marker;
+        this.targetLoc = targetLoc;
     }
 
     @Override
@@ -65,17 +71,17 @@ public class AutoPipeLine extends OpenCvPipeline {
         List<MatOfPoint> contourPoints = new ArrayList<>();
         Imgproc.findContours(hsvThresholdMat, contourPoints, hierarchyMat, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        MatOfPoint largest = null;
+        MatOfPoint closest = null;
         if(contourPoints.size() > 0)
-            largest = contourPoints.get(getLargestContourSize(contourPoints));
+            closest = contourPoints.get(getClosestToPoint(contourPoints));
 
-        if(largest != null){
+        if(closest != null){
             // It exist so get its position
 
-            Moments moment = Imgproc.moments(largest);
+            Moments moment = Imgproc.moments(closest);
 
 
-            Rect boundingBox = Imgproc.boundingRect(largest);
+            Rect boundingBox = Imgproc.boundingRect(closest);
 
             x = (int) boundingBox.x;//(moment.get_m10() / moment.get_m00());
             y = (int) boundingBox.y;//(moment.get_m01() / moment.get_m00());
@@ -110,7 +116,7 @@ public class AutoPipeLine extends OpenCvPipeline {
             );
 
             // approx
-            MatOfPoint2f contour2f = new MatOfPoint2f(largest.toArray());
+            MatOfPoint2f contour2f = new MatOfPoint2f(closest.toArray());
             MatOfPoint2f approxCurve = new MatOfPoint2f();
             double epsilon = 0.02 * Imgproc.arcLength(contour2f, true);
             Imgproc.approxPolyDP(contour2f, approxCurve, epsilon, true);
@@ -154,6 +160,24 @@ public class AutoPipeLine extends OpenCvPipeline {
                     4
             );
 
+            // Target point
+            Imgproc.circle(
+                    inputRaw,
+                    targetLoc,
+                    10,
+                    new Scalar(255, 0, 255)
+            );
+
+            Imgproc.putText(
+                    inputRaw,
+                    prevLocText,
+                    new Point(0, 40),
+                    Imgproc.FONT_HERSHEY_SIMPLEX,
+                    .75,
+                    new Scalar(120.0,100.0, 100.0),
+                    2
+            );
+
 
             return inputRaw;
         }
@@ -174,7 +198,34 @@ public class AutoPipeLine extends OpenCvPipeline {
         return index;
     }
 
+    private int getClosestToPoint(List<MatOfPoint> contours){
+        int tarIndex = 0;
+        double dist = Float.MAX_VALUE;
+
+        for(int i = 0; i < contours.size(); i++){
+            Rect boundingBox = Imgproc.boundingRect(contours.get(i));
+            if(getDist(new Point(boundingBox.x, boundingBox.y), targetLoc) < dist){
+                tarIndex = i;
+                dist = getDist(new Point(boundingBox.x, boundingBox.y), targetLoc);
+            }
+        }
+
+
+        return tarIndex;
+    }
+
+    public static double getDist(Point p1, Point p2){
+        return Math.sqrt(
+                Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)
+        );
+    }
+
     public int getX() {
         return x;
+    }
+    public int getY(){return y;}
+
+    public void setPrevLocText(String prevLocText) {
+        this.prevLocText = prevLocText;
     }
 }
