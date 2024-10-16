@@ -16,6 +16,10 @@ public class MainTeleOp extends LinearOpMode {
     private DcMotorEx leftBackDrive = null;
     private DcMotorEx rightBackDrive = null;
 
+    private enum armPosition {
+        TOP_POS, MID_POS, BOT_POS
+    }
+
     private void initHardware() {
         leftFrontDrive = hardwareMap.get(DcMotorEx.class,"leftFront");
         rightFrontDrive = hardwareMap.get(DcMotorEx.class, "rightFront");
@@ -44,6 +48,10 @@ public class MainTeleOp extends LinearOpMode {
         while (linearOpMode.opModeIsActive()){
             updateDriveMotors();
         }
+    }
+
+    private void updateArm(){
+        
     }
 
     private void updateDriveMotors() {
