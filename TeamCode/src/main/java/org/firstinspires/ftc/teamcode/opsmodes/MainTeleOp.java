@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.opsmodes;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.gamepad1;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@TeleOp(name= "SamTeleOp")
-public class SamTeleOp {
+@TeleOp(name= "TeleOp")
+public class MainTeleOp extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotorEx leftFrontDrive = null;
