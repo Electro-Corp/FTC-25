@@ -25,9 +25,24 @@ public class Arm {
 
     private final double PitchStop = 0.197;
     private final double PitchSeek = 0.4;
-    private final double PitchGrabSeek = 0.50;
-    private final double Grab = 0.56;
+    private final double PitchGrabSeek = 0.20;
+    private final double Grab = 0.5;
 
+
+    public static final int SLIDE_MIN = 0;
+    public static final int SLIDE_MAX = 2300;
+
+    private double pitchPos = 0.0f;
+
+
+
+    public enum ArmState{
+        TOP,
+        MID,
+        BOT
+    }
+
+    private ArmState armState = ArmState.TOP;
 
 
     public Arm(HardwareMap hardwareMap) {
@@ -39,6 +54,16 @@ public class Arm {
 
         this.upDown = hardwareMap.get(Servo.class, HARDWARE_NAME_PITCHSERVO);
 
+        setArmPos(SLIDE_MIN);
+        armPos = SLIDE_MIN;
+
+        pitchGoToPitchSeek();
+
+    }
+
+    public void pitchAppend(float pos) {
+        pitchPos += pos;
+        pitchSet(pitchPos);
     }
 
     public void pitchSet(double pos){
@@ -48,14 +73,20 @@ public class Arm {
     }
 
     public void pitchGoToPitchSeek(){
+        armState = ArmState.MID;
+        pitchPos = PitchGrabSeek;
         pitchSet(PitchGrabSeek);
     }
 
     public void pitchGrabSeek(){
+        armState = ArmState.BOT;
+        pitchPos = PitchSeek;
         pitchSet(PitchSeek);
     }
 
     public void pitchGoToGrab(){
+        armState = ArmState.TOP;
+        pitchPos = Grab;
         pitchSet(Grab);
     }
 
@@ -67,7 +98,12 @@ public class Arm {
         upDown.setPosition(POSITION_BUCKET);
     }
 
+    public ArmState getArmState(){
+        return armState;
+    }
+
     public void setArmPos(int x) {
+        armPos = x;
         armExtender.setTargetPosition(x);
         armExtender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armExtender.setPower(0.7);
@@ -77,9 +113,22 @@ public class Arm {
         return armExtender.getCurrentPosition();
     }
 
+    public int getTargetPos(){
+        return armPos;
+    }
+
     public void armAppendDist(int dist){
         armPos += dist;
+        if(armPos > SLIDE_MAX){
+            armPos = SLIDE_MAX;
+        }else if(armPos < SLIDE_MIN){
+            armPos = SLIDE_MIN;
+        }
         setArmPos(armPos);
+    }
+
+    public void zeroSlidePower(){
+        armExtender.setPower(0.0);
     }
 
 }

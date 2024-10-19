@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 //import org.firstinspires.ftc.teamcode.objects.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 //import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 @TeleOp(name="Servo Calib")
@@ -13,9 +14,9 @@ public class ServoCalib extends LinearOpMode {
     //Robot robot;
 
     // Float
-    float armPos = 0.45f, bucketPos = 0.0f, doorPos = 0.0f;
+    float armPos = 0.45f, clawPos = 0.0f, doorPos = 0.0f;
     int servoNumber = 2;
-    Servo armServo;
+    Servo clawServo;
     Servo bucketServo;
     Servo pitchSero;
 
@@ -26,6 +27,7 @@ public class ServoCalib extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         pitchSero = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_PITCHSERVO);
+        clawServo  = this.hardwareMap.get(Servo.class, Claw.SERVO_CLAW);
         //bucketServo = this.hardwareMap.get(Servo.class, Bucket.HARDWARE_NAME);
         //armServo = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME);
 
@@ -47,9 +49,9 @@ public class ServoCalib extends LinearOpMode {
                 changeDown = false;
             }
 
-            /*if(armPos < 0.0f)armPos = 0.0f;
-            if(armPos > 1.0f)armPos = 1.0f;
-            if(bucketPos < 0.0f)bucketPos = 0.0f;
+            if(clawPos < 0.0f)clawPos = 0.0f;
+            if(clawPos > 1.0f)clawPos = 1.0f;
+            /*if(bucketPos < 0.0f)bucketPos = 0.0f;
             if(bucketPos > 1.0f)bucketPos = 1.0f;
 
              */
@@ -58,7 +60,7 @@ public class ServoCalib extends LinearOpMode {
 
 
             //telemetry.addData("ARM", "%f", armPos);
-            //telemetry.addData("BUCKET", "%f", bucketPos);
+            telemetry.addData("CLAW", "%f", clawPos);
             telemetry.addData("DOOR", "%f", doorPos);
             telemetry.addLine("=======================");
             switch (servoNumber) {
@@ -69,10 +71,10 @@ public class ServoCalib extends LinearOpMode {
                     telemetry.addLine("CURRENT IS NOT-IMPLEMENTED, PRESS D-PAD TO MOVE TO NEXT SERVO");
                     break;
                 case 1:
-                    if (gamepad1.dpad_up) bucketPos += diff;
-                    if (gamepad1.dpad_down) bucketPos -= diff;
-                   // bucketServo.setPosition(bucketPos);
-                    telemetry.addLine("CURRENT IS NOT-IMPLEMENTED, PRESS D-PAD TO MOVE TO NEXT SERVO");
+                    if (gamepad1.dpad_up) clawPos += diff;
+                    if (gamepad1.dpad_down) clawPos -= diff;
+                    clawServo.setPosition(clawPos);
+                    telemetry.addLine("CURRENT IS CLAW");
                     break;
                 case 2:
                     if (gamepad1.dpad_up) doorPos += diff;
