@@ -24,13 +24,22 @@ public class Arm {
 
 
     private final double PitchStop = 0.197;
-    private final double PitchSeek = 0.4;
-    private final double PitchGrabSeek = 0.20;
+    private final double PitchSeek = 0.47;
+    private final double PitchGrabSeek = 0.23;
     private final double Grab = 0.5;
+
+    // Auto Pos for Clipon
+    private final double pitchClipPos = 0.35;
+    private final int slidePosClipOn = 1988;
+
+    // Auto pos for Bucket
+
+    private final double pitchBucketPos = 0.207;
+    //private final int slidePosBucket;
 
 
     public static final int SLIDE_MIN = 0;
-    public static final int SLIDE_MAX = 2300;
+    public static final int SLIDE_MAX = 2400;
 
     private double pitchPos = 0.0f;
 
@@ -57,7 +66,9 @@ public class Arm {
         setArmPos(SLIDE_MIN);
         armPos = SLIDE_MIN;
 
-        pitchGoToPitchSeek();
+
+
+        pitchGrabSeek();
 
     }
 
@@ -90,12 +101,26 @@ public class Arm {
         pitchSet(Grab);
     }
 
+    public void clipOn(){
+        pitchPos = pitchClipPos;
+        pitchSet(pitchPos);
+
+
+        armPos = slidePosClipOn;
+        setArmPos(slidePosClipOn, 0.3);
+    }
+
     public void moveToGround() {
         upDown.setPosition(POSITION_GROUND);
     }
 
     public void moveToBucket() {
-        upDown.setPosition(POSITION_BUCKET);
+        //upDown.setPosition(POSITION_BUCKET);
+        pitchPos = pitchBucketPos;
+        pitchSet(pitchPos);
+
+
+        setArmPos(SLIDE_MAX, 0.3);
     }
 
     public ArmState getArmState(){
@@ -103,10 +128,14 @@ public class Arm {
     }
 
     public void setArmPos(int x) {
+        setArmPos(x, 0.7);
+    }
+
+    public void setArmPos(int x, double speed) {
         armPos = x;
         armExtender.setTargetPosition(x);
         armExtender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armExtender.setPower(0.7);
+        armExtender.setPower(speed);
     }
 
     public int getArmPos(){

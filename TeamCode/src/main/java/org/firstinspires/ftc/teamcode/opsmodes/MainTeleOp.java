@@ -39,7 +39,7 @@ public class MainTeleOp extends LinearOpMode {
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -51,8 +51,6 @@ public class MainTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initHardware();
-
-        arm.pitchGoToPitchSeek();
 
         waitForStart();
         runtime.reset();
@@ -69,14 +67,16 @@ public class MainTeleOp extends LinearOpMode {
     boolean extend = false, lf = false;
     private void updateSlide(){
         //if(gamepad2.left_stick_y != 0.0)
-            arm.armAppendDist((int) -(gamepad2.left_stick_y * 1.7f));
+            arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
         //else{
         //    if(arm.getTargetPos() - 10 < arm.getArmPos() && arm.getArmPos() < arm.getTargetPos() + 10){
         //        arm.zeroSlidePower();
         //    }
         //}
         if(gamepad2.right_bumper && !lf){
-            lf = true;
+            arm.clipOn();
+        }
+        /*    lf = true;
             if(extend){
                 arm.setArmPos(Arm.SLIDE_MAX);
                 extend = false;
@@ -86,34 +86,53 @@ public class MainTeleOp extends LinearOpMode {
             }
         }else if(!gamepad2.right_bumper){
             lf = false;
-        }
+        }*/
     }
 
+    boolean yPressed = false, aPressed = false;
+    boolean extendSlide = false, fish = false;
     private void updateArm(){
-        if(gamepad2.left_bumper && !armChangerHeld){
+       if(gamepad2.left_bumper && !armChangerHeld){
             armChangerHeld = true;
-            switch(arm.getArmState()){
-                case TOP:
-                    arm.pitchGoToPitchSeek();
-                    break;
-                case MID:
-                    arm.pitchGrabSeek();
-                    break;
-                case BOT:
-                    arm.pitchGoToGrab();
-                    break;
-            }
+            arm.moveToBucket();
         }else if(!gamepad2.left_bumper){
             armChangerHeld = false;
         }
 
-        arm.pitchAppend(gamepad2.right_stick_y / 10000);
+        arm.pitchAppend(gamepad2.left_stick_y / 7000);
 
-        if(gamepad2.a){
+        if(gamepad2.y && !yPressed){
+            yPressed = true;
+            if(!extendSlide) {
+                arm.setArmPos(arm.SLIDE_MAX / 2);
+                extendSlide = true;
+            }else{
+                arm.setArmPos(0);
+                extendSlide = false;
+            }
+        }else if(!gamepad2.y){
+            yPressed = false;
+        }
+
+        if(gamepad2.a && !aPressed){
+            aPressed = true;
+            if(!fish) {
+                fish = true;
+                arm.pitchGrabSeek();
+            }else{
+                fish = false;
+                arm.pitchGoToPitchSeek();
+            }
+        }else if(!gamepad2.a){
+            aPressed = false;
+        }
+
+        /*if(gamepad2.a){
             arm.pitchAppend(0.01f);
         }else if(gamepad2.y){
             arm.pitchAppend(-0.01f);
-        }
+        }*/
+
     }
 
     private void updateClaw(){
@@ -134,7 +153,7 @@ public class MainTeleOp extends LinearOpMode {
     }
 
     private void updateDriveMotors() {
-        double max;
+        double max = 0.0;
         double axial = 0;
         double lateral = 0;
         double yaw = 0;
@@ -167,7 +186,7 @@ public class MainTeleOp extends LinearOpMode {
 
         max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
 
         if (max > 1.0) {
             leftFrontPower /= max;
@@ -175,6 +194,12 @@ public class MainTeleOp extends LinearOpMode {
             leftBackPower /= max;
             rightBackPower /= max;
         }
+
+        telemetry.addData("LF", leftFrontPower);
+        telemetry.addData("RF", rightFrontPower);
+        telemetry.addData("LB", leftBackPower);
+        telemetry.addData("RF", rightBackPower);
+
 
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
