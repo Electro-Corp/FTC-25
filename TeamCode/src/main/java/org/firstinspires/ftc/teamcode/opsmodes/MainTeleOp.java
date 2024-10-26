@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opsmodes;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
+import static org.firstinspires.ftc.teamcode.subsystems.Arm.SLIDE_MIN;
 
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -65,6 +66,8 @@ public class MainTeleOp extends LinearOpMode {
 
 
     boolean extend = false, lf = false;
+
+    boolean clipOnYesNo = false;
     private void updateSlide(){
         //if(gamepad2.left_stick_y != 0.0)
             arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
@@ -74,7 +77,14 @@ public class MainTeleOp extends LinearOpMode {
         //    }
         //}
         if(gamepad2.right_bumper && !lf){
-            arm.clipOn();
+            if(!clipOnYesNo) {
+                arm.clipOn();
+                clipOnYesNo = true;
+            }else{
+                arm.setArmPos(SLIDE_MIN);
+                arm.pitchGrabSeek();
+                clipOnYesNo = false;
+            }
         }
         /*    lf = true;
             if(extend){
@@ -91,10 +101,18 @@ public class MainTeleOp extends LinearOpMode {
 
     boolean yPressed = false, aPressed = false;
     boolean extendSlide = false, fish = false;
+    boolean bucketYesNo = false;
     private void updateArm(){
        if(gamepad2.left_bumper && !armChangerHeld){
             armChangerHeld = true;
-            arm.moveToBucket();
+            if(!bucketYesNo) {
+                arm.moveToBucket();
+                bucketYesNo = true;
+            }else{
+                arm.setArmPos(SLIDE_MIN);
+                arm.pitchGrabSeek();
+                bucketYesNo = false;
+            }
         }else if(!gamepad2.left_bumper){
             armChangerHeld = false;
         }

@@ -16,6 +16,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySe
  */
 public class RoadRunnerHelper<T>{
 
+    public static final int TILE_SIZE_IN = 24;
+
     public static final int DEFAULT_VEL = 25;
     public static final int DEFAULT_ANG_VEL = 2;
     public static final int REVERSE_FAST = 60;

@@ -36,6 +36,12 @@ public class AutoPipeLine extends OpenCvPipeline {
 
     private String prevLocText = "";
 
+    private Point lockOnPoint;
+
+    List<MatOfPoint> contourPoints = new ArrayList<>();
+
+
+
     public AutoPipeLine(Marker marker, Point targetLoc){
         this.marker = marker;
         this.targetLoc = targetLoc;
@@ -68,7 +74,7 @@ public class AutoPipeLine extends OpenCvPipeline {
         dilationElement = Imgproc.getStructuringElement(elementType, new Size(2 * dilationKernelSize + 1, 2 * dilationKernelSize + 1), new Point(dilationKernelSize, dilationKernelSize));
         Imgproc.dilate(hsvThresholdMat, hsvThresholdMat, dilationElement);
 
-        List<MatOfPoint> contourPoints = new ArrayList<>();
+
         Imgproc.findContours(hsvThresholdMat, contourPoints, hierarchyMat, Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
         MatOfPoint closest = null;
@@ -198,20 +204,37 @@ public class AutoPipeLine extends OpenCvPipeline {
         return index;
     }
 
+    public void lockOnPoint(Point point){
+        lockOnPoint = point;
+    }
+
     private int getClosestToPoint(List<MatOfPoint> contours){
+        return getClosestToPoint(contours, targetLoc);
+    }
+
+    public int getClosestToPoint(List<MatOfPoint> contours, Point point){
         int tarIndex = 0;
         double dist = Float.MAX_VALUE;
 
         for(int i = 0; i < contours.size(); i++){
             Rect boundingBox = Imgproc.boundingRect(contours.get(i));
-            if(getDist(new Point(boundingBox.x, boundingBox.y), targetLoc) < dist){
+            if(getDist(new Point(boundingBox.x, boundingBox.y), point) < dist){
                 tarIndex = i;
-                dist = getDist(new Point(boundingBox.x, boundingBox.y), targetLoc);
+                dist = getDist(new Point(boundingBox.x, boundingBox.y), point);
             }
         }
-
-
         return tarIndex;
+    }
+
+    public Point getClosestToLockOn(){
+
+        Rect boundingBox = Imgproc.boundingRect(contourPoints.get(getClosestToPoint(contourPoints, lockOnPoint)));
+
+        int tx = (int) boundingBox.x;//(moment.get_m10() / moment.get_m00());
+        int ty = (int) boundingBox.y;//(moment.get_m01() / moment.get_m00());
+
+
+        return new Point(tx, ty);
     }
 
     public static double getDist(Point p1, Point p2){
