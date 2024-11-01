@@ -227,11 +227,10 @@ public class AutoPipeLine extends OpenCvPipeline {
     }
 
     public Point getClosestToLockOn(){
-
         Rect boundingBox = Imgproc.boundingRect(contourPoints.get(getClosestToPoint(contourPoints, lockOnPoint)));
 
-        int tx = (int) boundingBox.x;//(moment.get_m10() / moment.get_m00());
-        int ty = (int) boundingBox.y;//(moment.get_m01() / moment.get_m00());
+        int tx = (int) boundingBox.x;
+        int ty = (int) boundingBox.y;
 
 
         return new Point(tx, ty);

@@ -18,6 +18,7 @@ public class Auto extends LinearOpMode {
     private static final double TARGET_X = 320;
     private static final double TARGET_Y = 240;
     private static final int ARM_DOWN_CONST = 5;
+    private static final double ITS_OK_TOLERANCE = 10.0;
     private OpenCVManager cam;
     private Arm arm;
     private Claw claw;
@@ -27,7 +28,8 @@ public class Auto extends LinearOpMode {
         SEEK,
         ALIGN_X,
         ALIGN_Y,
-        GRAB
+        GRAB,
+        MOVE_TO_BUCKET
     }
 
     private AutoState autoState = AutoState.GO_TO_TANK;
@@ -69,7 +71,7 @@ public class Auto extends LinearOpMode {
                     autoState = AutoState.SEEK;
                     break;
                 case SEEK:
-                    telemetry.addLine("==== CHOOSE PIECE TO LOCK ON TO ====");
+                    telemetry.addLine("==== CHOOSING PIECE TO LOCK ON TO ====");
                      posX = autoPipeLine.getX();
                      posY = autoPipeLine.getY();
                      autoPipeLine.lockOnPoint(new Point(posX, posY));
@@ -83,7 +85,7 @@ public class Auto extends LinearOpMode {
                     telemetry.addData("POS X", newLock.y);
                     Point alX = new Point(newLock.x , 0);
                     double dist = AutoPipeLine.getDist(alX, new Point(TARGET_X, 0));
-                    if(dist < 10.0){
+                    if(dist < ITS_OK_TOLERANCE){
                         autoState = AutoState.ALIGN_Y;
                     }else{
                         if(TARGET_X > alX.x){
@@ -106,7 +108,7 @@ public class Auto extends LinearOpMode {
                     telemetry.addData("POS X", newLockY.y);
                     Point alY = new Point(0 , newLockY.y);
                     double distY = AutoPipeLine.getDist(alY, new Point(0, TARGET_Y));
-                    if(distY < 10.0){
+                    if(distY < ITS_OK_TOLERANCE){
                         autoState = AutoState.GRAB;
                     }else{
                         if(TARGET_X > alY.y){
@@ -128,6 +130,27 @@ public class Auto extends LinearOpMode {
                     arm.pitchGoToGrab();
                     claw.closeClaw();
                     arm.pitchGoToPitchSeek();
+                    autoState = AutoState.MOVE_TO_BUCKET;
+                    break;
+                case MOVE_TO_BUCKET:
+                    telemetry.addLine("==== MOVING TO BUCKET ====");
+                    roadRunnerHelper.reverse(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .strafeRight(RoadRunnerHelper.TILE_SIZE_IN * 1.5)
+                            .strafeRight(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .turn(135)
+                            .forward(RoadRunnerHelper.TILE_SIZE_IN / 2);
+                    arm.moveToBucket();
+                    sleep(1000);
+                    claw.openClaw();
+
+                    // Reset position to tank
+                    roadRunnerHelper.reverse(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .turn(-135)
+                            .strafeLeft(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .strafeLeft(RoadRunnerHelper.TILE_SIZE_IN * 1.5)
+                            .forward(RoadRunnerHelper.TILE_SIZE_IN / 2);
+
+                    autoState = AutoState.SEEK;
                     break;
             }
             telemetry.update();

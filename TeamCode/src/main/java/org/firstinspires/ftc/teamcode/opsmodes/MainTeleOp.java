@@ -77,6 +77,7 @@ public class MainTeleOp extends LinearOpMode {
         //    }
         //}
         if(gamepad2.right_bumper && !lf){
+            lf = true;
             if(!clipOnYesNo) {
                 arm.clipOn();
                 clipOnYesNo = true;
@@ -85,6 +86,8 @@ public class MainTeleOp extends LinearOpMode {
                 arm.pitchGrabSeek();
                 clipOnYesNo = false;
             }
+        }else if(!gamepad2.right_bumper){
+            lf = false;
         }
         /*    lf = true;
             if(extend){
