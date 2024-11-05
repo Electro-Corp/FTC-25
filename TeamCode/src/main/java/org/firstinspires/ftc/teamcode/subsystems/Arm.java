@@ -72,7 +72,7 @@ public class Arm {
 
     }
 
-    public void pitchAppend(float pos) {
+    public void pitchAppend(double pos) {
         pitchPos += pos;
         pitchSet(pitchPos);
     }

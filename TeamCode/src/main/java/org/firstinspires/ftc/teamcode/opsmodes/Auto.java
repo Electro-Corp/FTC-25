@@ -24,6 +24,7 @@ public class Auto extends LinearOpMode {
     private Claw claw;
 
     private enum AutoState {
+        CLIP_ON,
         GO_TO_TANK,
         SEEK,
         ALIGN_X,
@@ -32,7 +33,7 @@ public class Auto extends LinearOpMode {
         MOVE_TO_BUCKET
     }
 
-    private AutoState autoState = AutoState.GO_TO_TANK;
+    private AutoState autoState = AutoState.CLIP_ON;
 
     AutoPipeLine autoPipeLine;
 
@@ -60,6 +61,28 @@ public class Auto extends LinearOpMode {
         }
         while(!isStopRequested()) {
             switch (autoState) {
+                case CLIP_ON:
+                    telemetry.addLine("==== CLIP ON ====");
+                    roadRunnerHelper.forward(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .strafeLeft(RoadRunnerHelper.TILE_SIZE_IN / 2);
+
+                    arm.clipOn();
+
+                    sleep(1000);
+
+                    arm.armAppendDist(10);
+                    arm.pitchAppend(0.05);
+                    arm.armAppendDist(-50);
+                    claw.openClaw();
+                    roadRunnerHelper.forward(2);
+                    arm.setArmPos(0);
+                    arm.pitchGoToPitchSeek();
+
+                    roadRunnerHelper.strafeRight(RoadRunnerHelper.TILE_SIZE_IN / 2)
+                            .reverse(RoadRunnerHelper.TILE_SIZE_IN / 2);
+
+                    autoState = AutoState.GO_TO_TANK;
+                    break;
                 case GO_TO_TANK:
                     telemetry.addLine("==== GO TO TANK ====");
                     roadRunnerHelper.forward(RoadRunnerHelper.TILE_SIZE_IN * 1.5)
@@ -139,11 +162,13 @@ public class Auto extends LinearOpMode {
                             .strafeRight(RoadRunnerHelper.TILE_SIZE_IN / 2)
                             .turn(135)
                             .forward(RoadRunnerHelper.TILE_SIZE_IN / 2);
+
+                    telemetry.addLine("==== DROPPING IN BUCKET ====");
                     arm.moveToBucket();
                     sleep(1000);
                     claw.openClaw();
-
                     // Reset position to tank
+                    telemetry.addLine("==== MOVING TO TANK [REDUX] ====");
                     roadRunnerHelper.reverse(RoadRunnerHelper.TILE_SIZE_IN / 2)
                             .turn(-135)
                             .strafeLeft(RoadRunnerHelper.TILE_SIZE_IN / 2)
