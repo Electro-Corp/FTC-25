@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@Autonomous(group="drive", name="Autonomous CLICK THIS")
+@Autonomous(group="drive", name="Autonomous TOO SIMPLE")
 public class AutoQuickHack extends LinearOpMode {
 
     private DcMotorEx leftFrontDrive = null;

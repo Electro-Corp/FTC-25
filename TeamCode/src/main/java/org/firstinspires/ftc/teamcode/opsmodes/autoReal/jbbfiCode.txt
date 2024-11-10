@@ -1,0 +1,27 @@
+function moveToBuckIniCLOSE
+driveHelper::forward(12)
+driveHelper::strafeLeft(12)
+function_end
+
+function moveToBuckIniFAR
+driveHelper::forward(24)
+driveHelper::strafeLeft(96)
+function_end
+
+function goToTape
+driveHelper::strafeRight(108)
+function_end
+
+function pickUpPiece
+
+function_end
+
+function dropInBucket
+driveHelper::rotate(135)
+arm::moveToBucket()
+arm::armAppendDist(15)
+driveHelper::forward(3)
+claw::openClaw()
+driveHelper::rotate(225)
+arm::pitchGrabSeek()
+function_end

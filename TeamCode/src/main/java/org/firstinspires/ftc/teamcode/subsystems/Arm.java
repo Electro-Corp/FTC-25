@@ -101,6 +101,7 @@ public class Arm {
         pitchSet(Grab);
     }
 
+
     public void clipOn(){
         pitchPos = pitchClipPos;
         pitchSet(pitchPos);
@@ -108,6 +109,15 @@ public class Arm {
 
         armPos = slidePosClipOn;
         setArmPos(slidePosClipOn, 0.3);
+    }
+
+    public void clipOn(double speed){
+        pitchPos = pitchClipPos;
+        pitchSet(pitchPos);
+
+
+        armPos = slidePosClipOn;
+        setArmPos(slidePosClipOn, speed);
     }
 
     public void moveToGround() {

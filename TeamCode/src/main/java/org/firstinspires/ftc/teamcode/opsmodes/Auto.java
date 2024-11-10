@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
 import org.firstinspires.ftc.teamcode.tests.AutoColorPos;
 import org.opencv.core.Point;
 
-///@Autonomous(group="drive", name="Autonomous DONT CLICK THIS")
+@Autonomous(group="drive", name="Autonomous DONT CLICK THIS")
 public class Auto extends LinearOpMode {
     private static final double TARGET_X = 320;
     private static final double TARGET_Y = 240;
@@ -33,7 +33,7 @@ public class Auto extends LinearOpMode {
         MOVE_TO_BUCKET
     }
 
-    private AutoState autoState = AutoState.CLIP_ON;
+    private AutoState autoState = AutoState.GO_TO_TANK;
 
     AutoPipeLine autoPipeLine;
 
@@ -54,11 +54,39 @@ public class Auto extends LinearOpMode {
         autoPipeLine = new AutoPipeLine(Marker.RED, new Point(TARGET_X, TARGET_Y));
         cam.setPipeline(autoPipeLine);
 
+        claw.closeClaw();
 
         while (!isStarted()) {
             telemetry.addLine("Waiting to launch...");
             telemetry.update();
         }
+
+
+        arm.clipOn(0.5);
+        sleep(3000);
+        arm.pitchAppend(-0.01);
+        //arm.armAppendDist(30);
+        //sleep(3000);
+//        roadRunnerHelper.forward(2, 3);
+//        sleep(3000);
+//        arm.pitchAppend(0.01);
+//        //sleep(3000);
+//        arm.armAppendDist(-100);
+//        //roadRunnerHelper.reverse(2.5, 3);
+//        sleep(1000);
+//        claw.openClaw();
+//        arm.pitchGoToPitchSeek();
+
+//        arm.pitchSet(0.385);
+//        sleep(800);
+//        arm.setArmPos(1737);
+//        sleep(1000);
+//        arm.pitchSet(0.300);
+//        sleep(2000);
+//        claw.openClaw();
+//        arm.setArmPos(0);
+//        arm.pitchGoToPitchSeek();
+
         while(!isStopRequested()) {
             switch (autoState) {
                 case CLIP_ON:
