@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.opsmodes;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
 import static org.firstinspires.ftc.teamcode.subsystems.Arm.SLIDE_MIN;
 
-import com.fasterxml.jackson.databind.node.TextNode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -161,7 +158,7 @@ public class MainTeleOp extends LinearOpMode {
             clawChangerHeld = true;
             switch(claw.getClawState()){
                 case OPEN:
-                    claw.closeClaw();
+                    claw.closeTheClaw();
                     break;
                 case CLOSE:
                     claw.openClaw();

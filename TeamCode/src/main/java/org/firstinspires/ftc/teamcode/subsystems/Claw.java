@@ -15,8 +15,8 @@ public class Claw {
     private static final String SERVO_WRIST = "servoWrist";
     public static final String SERVO_CLAW = "ClawServo ";
 
-    private static final float POSITION_CLAW_OPENED = 0.636f;
-    private static final float POSITION_CLAW_CLOSED = 0.863f;
+    private static final float POSITION_CLAW_OPENED = 0.60f;
+    private static final float POSITION_CLAW_CLOSED = 0.98f;
     private static final float POSITION_WRIST_CENTERED = .5f;
 
     private float currentTargetPos = 0.0f;
@@ -31,20 +31,25 @@ public class Claw {
     }
 
     private void setClawPos(float pos){
-
         servoClaw.setPosition(pos);
     }
 
     public void openClaw(){
-        currentTargetPos = POSITION_CLAW_OPENED;
-        setClawPos(currentTargetPos);
-        clawState = OPEN;
+        if(clawState == OPEN) {
+            currentTargetPos = POSITION_CLAW_CLOSED;
+            setClawPos(currentTargetPos);
+            clawState = CLOSE;
+        }else {
+            currentTargetPos = POSITION_CLAW_OPENED;
+            setClawPos(currentTargetPos);
+            clawState = OPEN;
+        }
     }
 
-    public void closeClaw(){
+    public void closeTheClaw(){
         currentTargetPos = POSITION_CLAW_CLOSED;
         setClawPos(currentTargetPos);
-        clawState = CLOSE;
+        //clawState = CLOSE;
     }
 
     public void appendDist(float dist){

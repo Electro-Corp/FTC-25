@@ -4,8 +4,8 @@ driveHelper::strafeLeft(12)
 function_end
 
 function moveToBuckIniFAR
-driveHelper::forward(24)
-driveHelper::strafeLeft(96)
+driveHelper::forward(12)
+driveHelper::strafeLeft(60)
 function_end
 
 function goToTape
@@ -17,11 +17,27 @@ function pickUpPiece
 function_end
 
 function dropInBucket
-driveHelper::rotate(135)
+driveHelper::turn(125)
 arm::moveToBucket()
-arm::armAppendDist(15)
-driveHelper::forward(3)
+me::waitTime(2500)
+arm::armAppendDist(30)
+me::waitTime(800)
+driveHelper::forward(23)
+me::waitTime(800)
+arm::pitchAppend(0.05)
+me::waitTime(800)
 claw::openClaw()
-driveHelper::rotate(225)
+me::waitTime(800)
+claw::openClaw()
+me::waitTime(100)
+arm::moveToBucket()
+me::waitTime(800)
+driveHelper::reverse(25)
+driveHelper::turn(225)
+arm::setArmPos(0)
 arm::pitchGrabSeek()
+function_end
+
+function clo
+me::close()
 function_end

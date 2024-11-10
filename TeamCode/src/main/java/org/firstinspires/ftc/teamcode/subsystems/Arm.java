@@ -23,18 +23,18 @@ public class Arm {
     private int armPos;
 
 
-    private final double PitchStop = 0.197;
-    private final double PitchSeek = 0.47;
-    private final double PitchGrabSeek = 0.23;
+    private final double PitchStop = 0.07;
+    private final double PitchSeek = 0.35;
+    private final double PitchGrabSeek = 0.35;//0.23;
     private final double Grab = 0.5;
 
     // Auto Pos for Clipon
-    private final double pitchClipPos = 0.35;
+    private final double pitchClipPos = 0.23;
     private final int slidePosClipOn = 1988;
 
     // Auto pos for Bucket
 
-    private final double pitchBucketPos = 0.207;
+    private final double pitchBucketPos = 0.087;
     //private final int slidePosBucket;
 
 
@@ -74,6 +74,12 @@ public class Arm {
 
     public void pitchAppend(double pos) {
         pitchPos += pos;
+        pitchSet(pitchPos);
+    }
+
+    // Bascially only for JBBFI
+    public void pitchAppendNeg(double pos) {
+        pitchPos -= pos;
         pitchSet(pitchPos);
     }
 

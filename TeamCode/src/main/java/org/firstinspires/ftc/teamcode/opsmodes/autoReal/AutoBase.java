@@ -26,43 +26,60 @@ public abstract class AutoBase extends LinearOpMode {
     String error;
 
     JBBFI jbbfi;
+    ScriptingWebPortal scriptingWebPortal;
+
+    boolean alreadyLaunched = false;
+
+    public void waitTime(double milli){
+        sleep((long) milli);
+    }
+
+    public void close(){
+        claw.closeTheClaw();
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Thread.UncaughtExceptionHandler caught = new Thread.UncaughtExceptionHandler(){
-            @Override
-            public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
-                 error = e.toString();
+        if(!alreadyLaunched) {
+            Thread.UncaughtExceptionHandler caught = new Thread.UncaughtExceptionHandler() {
+                @Override
+                public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
+                    error = e.toString();
+
+                }
+
+            };
+            error = "NONE";
+
+            scriptingWebPortal = new ScriptingWebPortal(hardwareMap.appContext);
+            scriptingWebPortal.setUncaughtExceptionHandler(caught);
+            scriptingWebPortal.start();
+
+
+            // Create drivehelper
+            SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
+            RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
+
+            Arm arm = new Arm(hardwareMap);
+            Claw claw = new Claw(hardwareMap);
+
+
+            try {
+                jbbfi = new JBBFI("/sdcard/scripting/test.jbbfi", hardwareMap);
+                jbbfi.addGlobal(roadRunnerHelper, "driveHelper");
+                jbbfi.addGlobal(arm, "arm");
+                jbbfi.addGlobal(claw, "claw");
+                jbbfi.addGlobal(this, "me");
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
             }
 
-        };
-        error = "NONE";
+            scriptingWebPortal.setJbbfi(jbbfi);
 
-        ScriptingWebPortal scriptingWebPortal = new ScriptingWebPortal(hardwareMap.appContext);
-        scriptingWebPortal.setUncaughtExceptionHandler(caught);
-        scriptingWebPortal.start();
+            alreadyLaunched = true;
 
-
-        // Create drivehelper
-        SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-        RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
-
-        Arm arm = new Arm(hardwareMap);
-        Claw claw = new Claw(hardwareMap);
-
-
-
-        try {
-            jbbfi = new JBBFI("/sdcard/scripting/test.jbbfi", hardwareMap);
-            jbbfi.addGlobal(roadRunnerHelper, "driveHelper");
-            jbbfi.addGlobal(arm, "arm");
-            jbbfi.addGlobal(claw, "claw");
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
         }
-
-        scriptingWebPortal.setJbbfi(jbbfi);
 
         while(!isStarted() && !isStopRequested()) {
             if(scriptingWebPortal.isAlive()){
@@ -84,6 +101,9 @@ public abstract class AutoBase extends LinearOpMode {
         } catch (Exception e){
             throw new RuntimeException(e);
         }
+
+        // Relaunch everything
+        //runOpMode();
     }
 
     public void runFunc(String name){
@@ -94,9 +114,6 @@ public abstract class AutoBase extends LinearOpMode {
         }
     }
 
-    public void goToTape(){
-        runFunc("goToTape");
-    }
 
     public abstract void moveToBucketInit();
 

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Marker;
 import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
-import org.firstinspires.ftc.teamcode.tests.AutoColorPos;
 import org.opencv.core.Point;
 
 @Autonomous(group="drive", name="Autonomous DONT CLICK THIS")
@@ -54,7 +53,7 @@ public class Auto extends LinearOpMode {
         autoPipeLine = new AutoPipeLine(Marker.RED, new Point(TARGET_X, TARGET_Y));
         cam.setPipeline(autoPipeLine);
 
-        claw.closeClaw();
+        claw.closeTheClaw();
 
         while (!isStarted()) {
             telemetry.addLine("Waiting to launch...");
@@ -179,7 +178,7 @@ public class Auto extends LinearOpMode {
                     arm.armAppendDist(ARM_DOWN_CONST);
                     claw.openClaw();
                     arm.pitchGoToGrab();
-                    claw.closeClaw();
+                    claw.closeTheClaw();
                     arm.pitchGoToPitchSeek();
                     autoState = AutoState.MOVE_TO_BUCKET;
                     break;
