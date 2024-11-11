@@ -11,6 +11,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
 
+import java.util.Arrays;
+
 public abstract class AutoBase extends LinearOpMode {
     protected AutoBase() {
     }
@@ -81,6 +83,11 @@ public abstract class AutoBase extends LinearOpMode {
 
         }
 
+        // Get modules
+        String[] loadedObjects = jbbfi.getObjectNames();
+
+        String objectsList = String.format("%s", Arrays.toString(loadedObjects));
+
         while(!isStarted() && !isStopRequested()) {
             if(scriptingWebPortal.isAlive()){
                 telemetry.addLine("ScriptPortal is alive\n");
@@ -90,6 +97,9 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.addData("State", scriptingWebPortal.getState().toString());
             telemetry.addData("PORT", scriptingWebPortal.PORT_FINAL);
             telemetry.addData("Error", error);
+            telemetry.addLine("======= JBBFI TRACE =======");
+            telemetry.addData("Last/Current line parsed", jbbfi.parseLineCur);
+            telemetry.addData("Loaded objects", objectsList);
             telemetry.update();
         }
 
@@ -108,7 +118,8 @@ public abstract class AutoBase extends LinearOpMode {
 
     public void runFunc(String name){
         try {
-            jbbfi.runFunction(name);
+            if(opModeIsActive())
+                jbbfi.runFunction(name);
         } catch (Exception e){
             throw new RuntimeException(e);
         }

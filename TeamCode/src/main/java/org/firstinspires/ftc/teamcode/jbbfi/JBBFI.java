@@ -27,6 +27,8 @@ public class JBBFI {
 
     public static HardwareMap hardwareMap;
 
+    public String parseLineCur = "No Line Loaded";
+
     int currentLine = 0;
 
     public JBBFI(String fileName) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
@@ -86,6 +88,12 @@ public class JBBFI {
         );
     }
 
+    public String[] getObjectNames(){
+        return objects.stream()
+                .map(JBBFIObject::getName)
+                .toArray(String[]::new);
+    }
+
 
 
     public void readFile(String fileName) throws FileNotFoundException {
@@ -99,6 +107,7 @@ public class JBBFI {
     }
 
     private void parseLine(String line) throws JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        parseLineCur = line;
         String[] tokens = line.split("\\s+"); // we're looking for spaces
 
         switch(tokens[0]){
