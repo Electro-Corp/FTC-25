@@ -30,6 +30,8 @@ public abstract class AutoBase extends LinearOpMode {
     JBBFI jbbfi;
     ScriptingWebPortal scriptingWebPortal;
 
+
+
     boolean alreadyLaunched = false;
 
     public void waitTime(double milli){
@@ -99,7 +101,12 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.addData("Error", error);
             telemetry.addLine("======= JBBFI TRACE =======");
             telemetry.addData("Last/Current line parsed", jbbfi.parseLineCur);
+            telemetry.addData("Last function run", jbbfi.funcRunCur);
             telemetry.addData("Loaded objects", objectsList);
+            telemetry.addLine("==== MEMORY DEBUG ====");
+            telemetry.addData("Total Memory", Runtime.getRuntime().totalMemory());
+            telemetry.addData("Free Memory", Runtime.getRuntime().freeMemory());
+            telemetry.addData("Current memory usage", Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
             telemetry.update();
         }
 

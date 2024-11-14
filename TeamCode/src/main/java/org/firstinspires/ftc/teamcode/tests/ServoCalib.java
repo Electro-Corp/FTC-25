@@ -14,10 +14,10 @@ public class ServoCalib extends LinearOpMode {
     //Robot robot;
 
     // Float
-    float armPos = 0.45f, clawPos = 0.0f, doorPos = 0.0f;
+    float wristPos = 0.45f, clawPos = 0.0f, doorPos = 0.0f;
     int servoNumber = 2;
     Servo clawServo;
-    Servo bucketServo;
+    Servo wristServo;
     Servo pitchSero;
 
     boolean changeDown = false;
@@ -29,7 +29,7 @@ public class ServoCalib extends LinearOpMode {
         pitchSero = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_PITCHSERVO);
         clawServo  = this.hardwareMap.get(Servo.class, Claw.SERVO_CLAW);
         //bucketServo = this.hardwareMap.get(Servo.class, Bucket.HARDWARE_NAME);
-        //armServo = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME);
+        wristServo = this.hardwareMap.get(Servo.class, Claw.SERVO_WRIST);
 
         waitForStart();
 
@@ -59,16 +59,16 @@ public class ServoCalib extends LinearOpMode {
             if(doorPos > 1.0f)doorPos = 1.0f;
 
 
-            //telemetry.addData("ARM", "%f", armPos);
+            telemetry.addData("WRIST", "%f", wristPos);
             telemetry.addData("CLAW", "%f", clawPos);
             telemetry.addData("DOOR", "%f", doorPos);
             telemetry.addLine("=======================");
             switch (servoNumber) {
-                case 0: //ARM
-                    if (gamepad1.dpad_up) armPos += diff;
-                    if (gamepad1.dpad_down) armPos -= diff;
-                    //armServo.setPosition(armPos);
-                    telemetry.addLine("CURRENT IS NOT-IMPLEMENTED, PRESS D-PAD TO MOVE TO NEXT SERVO");
+                case 0: //WRIST
+                    if (gamepad1.dpad_up) wristPos += diff;
+                    if (gamepad1.dpad_down) wristPos -= diff;
+                    wristServo.setPosition(wristPos);
+                    telemetry.addLine("CURRENT IS WRIST");
                     break;
                 case 1:
                     if (gamepad1.dpad_up) clawPos += diff;
@@ -80,7 +80,7 @@ public class ServoCalib extends LinearOpMode {
                     if (gamepad1.dpad_up) doorPos += diff;
                     if (gamepad1.dpad_down) doorPos -= diff;
                     pitchSero.setPosition(doorPos);
-                    telemetry.addLine("CURRENT IS PITCH");
+                    telemetry.addLine("CURRENT IS ARM");
                     break;
 
             }

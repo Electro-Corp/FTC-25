@@ -28,6 +28,7 @@ public class JBBFI {
     public static HardwareMap hardwareMap;
 
     public String parseLineCur = "No Line Loaded";
+    public String funcRunCur = "No function run";
 
     int currentLine = 0;
 
@@ -177,6 +178,12 @@ public class JBBFI {
             case "set":
 
                 break;
+            /*
+                goto functionName
+             */
+            case "goto":
+                runFunction(tokens[1]);
+                break;
             default:
                 // is it empty?
                 if(tokens[0].isEmpty()) return;
@@ -188,7 +195,7 @@ public class JBBFI {
                 if(runFunction(tokens[0]) == 1) return;
 
                 // Maybe the name of an object? lets try
-                // Split at "." since that is how functions are called
+                // Split at "::" since that is how functions are called
                 String[] possible = line.split("\\::");
                 boolean found = false;
                 for (JBBFIObject obj:
@@ -314,6 +321,7 @@ public class JBBFI {
      * @throws JBBFIUnknownKeywordException
      */
     public int runFunction(String funcName) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        funcRunCur = funcName;
         for (JBBFIFunction func:
                 functions) {
             if(funcName.split("\\(")[0].contains(func.getFunctionName())) {

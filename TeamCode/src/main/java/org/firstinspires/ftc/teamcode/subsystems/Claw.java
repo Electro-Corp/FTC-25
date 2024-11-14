@@ -12,26 +12,48 @@ public class Claw {
     }
     private ClawState clawState = ClawState.CLOSE;
 
-    private static final String SERVO_WRIST = "servoWrist";
+    public static final String SERVO_WRIST = "WristServo";
     public static final String SERVO_CLAW = "ClawServo ";
 
     private static final float POSITION_CLAW_OPENED = 0.60f;
     private static final float POSITION_CLAW_CLOSED = 0.98f;
     private static final float POSITION_WRIST_CENTERED = .5f;
 
+    private static final float POSITION_WRIST_LEFT = 0.0f;
+    private static final float POSITION_WRIST_CENTER = 0.5f;
+    private static final float POSITION_WRIST_RIGHT = 1.0f;
+
     private float currentTargetPos = 0.0f;
 
     //private final Servo servoWrist;
     private final Servo servoClaw;
+    private final Servo servoWrist;
 
     public Claw(HardwareMap hardwareMap){
         //this.servoWrist = hardwareMap.get(Servo.class, SERVO_WRIST);
         this.servoClaw = hardwareMap.get(Servo.class, SERVO_CLAW);
+        this.servoWrist = hardwareMap.get(Servo.class, SERVO_WRIST);
 
     }
 
     private void setClawPos(float pos){
         servoClaw.setPosition(pos);
+    }
+
+    private void setWristPos(float pos){
+        servoWrist.setPosition(pos);
+    }
+
+    public void wristLeft(){
+        setWristPos(POSITION_WRIST_LEFT);
+    }
+
+    public void wristRight(){
+        setWristPos(POSITION_WRIST_RIGHT);
+    }
+
+    private void wristCenter(){
+        setWristPos(POSITION_WRIST_CENTER);
     }
 
     public void openClaw(){

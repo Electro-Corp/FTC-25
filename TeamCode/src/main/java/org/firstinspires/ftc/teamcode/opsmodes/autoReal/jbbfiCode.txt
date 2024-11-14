@@ -1,11 +1,13 @@
 function moveToBuckIniCLOSE
 driveHelper::forward(12)
 driveHelper::strafeLeft(12)
+goto dropInBucket
 function_end
 
 function moveToBuckIniFAR
 driveHelper::forward(12)
 driveHelper::strafeLeft(60)
+goto dropInBucket
 function_end
 
 function goToTape
@@ -36,6 +38,7 @@ driveHelper::reverse(25)
 driveHelper::turn(225)
 arm::setArmPos(0)
 arm::pitchGrabSeek()
+goto goToTape
 function_end
 
 function clo
