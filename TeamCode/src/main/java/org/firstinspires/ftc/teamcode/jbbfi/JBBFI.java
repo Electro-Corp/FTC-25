@@ -234,7 +234,7 @@ public class JBBFI {
                     }
                 }
                 if(!found){
-                    throw new JBBFIUnknownKeywordException(tokens[0]);
+                    throw new JBBFIUnknownKeywordException(possible[0] + "/w line " + tokens[0]);
                 }
                 break;
         }

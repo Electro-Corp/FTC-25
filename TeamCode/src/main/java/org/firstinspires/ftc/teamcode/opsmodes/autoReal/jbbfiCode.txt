@@ -1,11 +1,11 @@
 function moveToBuckIniCLOSE
-driveHelper::forward(12)
-driveHelper::strafeLeft(12)
+driveHelper::forward(14)
+driveHelper::strafeLeft(17)
 goto dropInBucket
 function_end
 
 function moveToBuckIniFAR
-driveHelper::forward(12)
+driveHelper::forward(14)
 driveHelper::strafeLeft(60)
 goto dropInBucket
 function_end
@@ -21,26 +21,72 @@ function_end
 function dropInBucket
 driveHelper::turn(125)
 arm::moveToBucket()
-me::waitTime(2500)
+me::pause(2500)
 arm::armAppendDist(30)
-me::waitTime(800)
-driveHelper::forward(23)
-me::waitTime(800)
+me::pause(800)
+driveHelper::forward(16)
+me::pause(500)
 arm::pitchAppend(0.05)
-me::waitTime(800)
+me::pause(200)
 claw::openClaw()
-me::waitTime(800)
+me::pause(300)
 claw::openClaw()
-me::waitTime(100)
+me::pause(100)
 arm::moveToBucket()
-me::waitTime(800)
-driveHelper::reverse(25)
+me::pause(600)
+driveHelper::reverse(16)
 driveHelper::turn(225)
 arm::setArmPos(0)
 arm::pitchGrabSeek()
-goto goToTape
+me::pause(1000)
+goto pickUpFromTape
+function_end
+
+function pickUpFromTape
+driveHelper::turn(15)
+claw::wristRight()
+claw::openClaw()
+arm::setArmPos(1200)
+me::pause(600)
+arm::pitchSet(0.400)
+me::pause(600)
+claw::openClaw()
+me::pause(600)
+arm::pitchGrabSeek()
+arm::setArmPos(0)
+me::pause(200)
+driveHelper::strafeLeft(2)
+driveHelper::reverse(2)
+goto bucketTwo
+function_end
+
+function bucketTwo
+driveHelper::turn(115)
+arm::moveToBucket()
+me::pause(2500)
+arm::armAppendDist(30)
+me::pause(800)
+driveHelper::forward(16)
+me::pause(500)
+arm::pitchAppend(0.05)
+me::pause(200)
+claw::openClaw()
+me::pause(300)
+claw::openClaw()
+me::pause(100)
+arm::moveToBucket()
+driveHelper::reverse(16)
+me::pause(600)
+arm::setArmPos(0)
+arm::pitchGrabSeek()
+driveHelper::turn(425)
+driveHelper::strafeRight(48)
+arm::pitchSet(0)
+driveHelper::reverse(25)
+arm::
 function_end
 
 function clo
 me::close()
 function_end
+

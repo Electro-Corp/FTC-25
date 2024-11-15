@@ -34,7 +34,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     boolean alreadyLaunched = false;
 
-    public void waitTime(double milli){
+    public void pause(double milli){
         sleep((long) milli);
     }
 
@@ -92,17 +92,16 @@ public abstract class AutoBase extends LinearOpMode {
 
         while(!isStarted() && !isStopRequested()) {
             if(scriptingWebPortal.isAlive()){
-                telemetry.addLine("ScriptPortal is alive\n");
+                telemetry.addLine("ScriptPortal is alive " + scriptingWebPortal.getState().toString());
             }else{
-                telemetry.addLine("ScriptPortal is dead\n");
+                telemetry.addLine("ScriptPortal is dead " + scriptingWebPortal.getState().toString());
             }
-            telemetry.addData("State", scriptingWebPortal.getState().toString());
             telemetry.addData("PORT", scriptingWebPortal.PORT_FINAL);
             telemetry.addData("Error", error);
             telemetry.addLine("======= JBBFI TRACE =======");
             telemetry.addData("Last/Current line parsed", jbbfi.parseLineCur);
             telemetry.addData("Last function run", jbbfi.funcRunCur);
-            telemetry.addData("Loaded objects", objectsList);
+            telemetry.addLine("Loaded objects: " + objectsList);
             telemetry.addLine("==== MEMORY DEBUG ====");
             telemetry.addData("Total Memory", Runtime.getRuntime().totalMemory());
             telemetry.addData("Free Memory", Runtime.getRuntime().freeMemory());
@@ -112,9 +111,9 @@ public abstract class AutoBase extends LinearOpMode {
 
         try {
             moveToBucketInit();
-            runFunc("dropInBucket");
-            runFunc("goToTape");
-            runFunc("pickUpPiece");
+//            runFunc("dropInBucket");
+//            runFunc("goToTape");
+//            runFunc("pickUpPiece");
         } catch (Exception e){
             throw new RuntimeException(e);
         }

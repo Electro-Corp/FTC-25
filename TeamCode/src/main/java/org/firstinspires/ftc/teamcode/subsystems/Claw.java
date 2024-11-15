@@ -19,9 +19,9 @@ public class Claw {
     private static final float POSITION_CLAW_CLOSED = 0.98f;
     private static final float POSITION_WRIST_CENTERED = .5f;
 
-    private static final float POSITION_WRIST_LEFT = 0.0f;
+    private static final float POSITION_WRIST_LEFT = 0.84f;
     private static final float POSITION_WRIST_CENTER = 0.5f;
-    private static final float POSITION_WRIST_RIGHT = 1.0f;
+    private static final float POSITION_WRIST_RIGHT = 0.17f;
 
     private float currentTargetPos = 0.0f;
 
@@ -33,6 +33,8 @@ public class Claw {
         //this.servoWrist = hardwareMap.get(Servo.class, SERVO_WRIST);
         this.servoClaw = hardwareMap.get(Servo.class, SERVO_CLAW);
         this.servoWrist = hardwareMap.get(Servo.class, SERVO_WRIST);
+
+        wristCenter();
 
     }
 
