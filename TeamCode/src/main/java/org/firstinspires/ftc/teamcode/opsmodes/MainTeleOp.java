@@ -153,7 +153,18 @@ public class MainTeleOp extends LinearOpMode {
 
     }
 
+    boolean bNotHeld = false;
     private void updateClaw(){
+        if(gamepad2.b && !bNotHeld){
+            bNotHeld = true;
+            claw.wristCenter();
+        }else if(!gamepad2.b){
+            bNotHeld = false;
+        }
+
+        claw.appendWristPos(gamepad2.right_trigger / 400);
+        claw.appendWristPos(-gamepad2.left_trigger / 400);
+
         if(gamepad2.x && !clawChangerHeld){
             clawChangerHeld = true;
             switch(claw.getClawState()){
