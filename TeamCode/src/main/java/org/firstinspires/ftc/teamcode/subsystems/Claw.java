@@ -73,7 +73,7 @@ public class Claw {
     public void openTeleOp(){
         currentTargetPos = POSITION_CLAW_CLOSED;
         setClawPos(currentTargetPos);
-        clawState = CLOSE;
+        clawState = OPEN;
     }
 
     public void closeTheClaw(){
