@@ -124,12 +124,12 @@ public class AutoColorPos extends LinearOpMode  {
 
                         if (TARGET_X > posX) {
                             // Rotate claw ->
-                            whereTo += "Rotate Bot ->";
-                            roadRunnerHelper.turn(1f);
+                            whereTo += "Strafe Bot ->";
+                            roadRunnerHelper.strafeLeft(0.1);
                         } else if (TARGET_X < posX) {
                             // Rotate claw <-
-                            whereTo += "Rotate Bot <-";
-                            roadRunnerHelper.turn(-1f);
+                            whereTo += "Strafe Bot <-";
+                            roadRunnerHelper.strafeRight(0.1);
                         }
                     }else{
                         whereTo += "No rotation.";
