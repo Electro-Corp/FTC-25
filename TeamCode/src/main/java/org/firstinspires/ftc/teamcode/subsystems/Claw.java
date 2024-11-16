@@ -70,10 +70,16 @@ public class Claw {
         }
     }
 
+    public void openTeleOp(){
+        currentTargetPos = POSITION_CLAW_CLOSED;
+        setClawPos(currentTargetPos);
+        clawState = CLOSE;
+    }
+
     public void closeTheClaw(){
         currentTargetPos = POSITION_CLAW_CLOSED;
         setClawPos(currentTargetPos);
-        //clawState = CLOSE;
+        clawState = CLOSE;
     }
 
     public void appendDist(float dist){
