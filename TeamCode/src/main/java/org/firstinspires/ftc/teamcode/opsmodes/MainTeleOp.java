@@ -161,7 +161,7 @@ public class MainTeleOp extends LinearOpMode {
                     claw.closeTheClaw();
                     break;
                 case CLOSE:
-                    claw.openClaw();
+                    claw.openTeleOp();
                     break;
             }
 
