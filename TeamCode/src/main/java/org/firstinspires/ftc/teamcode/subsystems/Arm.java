@@ -29,7 +29,7 @@ public class Arm {
     private final double Grab = 0.5;
 
     // Auto Pos for Clipon
-    private final double pitchClipPos = 0.23;
+    private final double pitchClipPos = 0.22;
     private final int slidePosClipOn = 1988;
 
     // Auto pos for Bucket
