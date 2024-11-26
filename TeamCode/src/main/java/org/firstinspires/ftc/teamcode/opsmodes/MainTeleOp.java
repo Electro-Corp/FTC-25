@@ -56,78 +56,56 @@ public class MainTeleOp extends LinearOpMode {
         while (opModeIsActive()){
             updateArm();
             updateClaw();
-            updateSlide();
             updateDriveMotors();
         }
     }
 
     boolean extend = false, lf = false;
-
     boolean clipOnYesNo = false;
-    private void updateSlide(){
-        //if(gamepad2.left_stick_y != 0.0)
-            arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
-        //else{
-        //    if(arm.getTargetPos() - 10 < arm.getArmPos() && arm.getArmPos() < arm.getTargetPos() + 10){
-        //        arm.zeroSlidePower();
-        //    }
-        //}
-        if(gamepad2.right_bumper && !lf){
-            lf = true;
-            if(!clipOnYesNo) {
-                arm.clipOn();
-                clipOnYesNo = true;
-            }else{
-                arm.setArmPos(SLIDE_MIN);
-                arm.pitchGrabSeek();
-                clipOnYesNo = false;
-            }
-        }else if(!gamepad2.right_bumper){
-            lf = false;
-        }
-        /*    lf = true;
-            if(extend){
-                arm.setArmPos(Arm.SLIDE_MAX);
-                extend = false;
-            }else{
-                arm.setArmPos(Arm.SLIDE_MIN);
-                extend = true;
-            }
-        }else if(!gamepad2.right_bumper){
-            lf = false;
-        }*/
-    }
-
     boolean yPressed = false, aPressed = false;
     boolean extendSlide = false, fish = false;
     boolean bucketYesNo = false;
     private void updateArm(){
+        arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
+
+        if(gamepad2.right_bumper && !lf) {
+            lf = true;
+            if(!clipOnYesNo) {
+                arm.clipOn();
+                clipOnYesNo = true;
+            } else {
+                arm.setArmPos(SLIDE_MIN);
+                arm.pitchGrabSeek();
+                clipOnYesNo = false;
+            }
+        } else if(!gamepad2.right_bumper) {
+            lf = false;
+        }
+
        if(gamepad2.left_bumper && !armChangerHeld){
             armChangerHeld = true;
             if(!bucketYesNo) {
                 arm.moveToBucket();
                 bucketYesNo = true;
-            }else{
+            } else {
                 arm.setArmPos(SLIDE_MIN);
                 arm.pitchGrabSeek();
                 bucketYesNo = false;
             }
-        }else if(!gamepad2.left_bumper){
+        } else if(!gamepad2.left_bumper) {
             armChangerHeld = false;
         }
-
-        arm.pitchAppend(gamepad2.left_stick_y / 7000);
 
         if(gamepad2.y && !yPressed){
             yPressed = true;
             if(!extendSlide) {
                 arm.setArmPos(arm.SLIDE_MAX / 2);
                 extendSlide = true;
-            }else{
+            } else {
                 arm.setArmPos(0);
                 extendSlide = false;
             }
-        }else if(!gamepad2.y){
+        } else if(!gamepad2.y) {
             yPressed = false;
         }
 
@@ -143,6 +121,8 @@ public class MainTeleOp extends LinearOpMode {
         }else if(!gamepad2.a){
             aPressed = false;
         }
+
+        arm.pitchAppend(gamepad2.left_stick_y / 7000);
 
         /*if(gamepad2.a){
             arm.pitchAppend(0.01f);
