@@ -1,12 +1,14 @@
 function moveToBuckIniCLOSE
-driveHelper::forward(14)
-driveHelper::strafeLeft(17)
+//driveHelper::forward(14)
+//driveHelper::strafeLeft(17)
+driveHelper::splineToLinearHeading(17,14,125)
 goto dropInBucket
 function_end
 
 function moveToBuckIniFAR
-driveHelper::forward(14)
-driveHelper::strafeLeft(60)
+//driveHelper::forward(14)
+//driveHelper::strafeLeft(60)
+driveHelper::splineToLinearHeading(60,14,125)
 goto dropInBucket
 function_end
 
@@ -19,7 +21,7 @@ function pickUpPiece
 function_end
 
 function dropInBucket
-driveHelper::turn(125)
+//driveHelper::turn(125)
 arm::moveToBucket()
 me::pause(2500)
 arm::armAppendDist(80)
