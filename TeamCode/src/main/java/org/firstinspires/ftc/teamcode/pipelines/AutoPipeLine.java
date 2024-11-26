@@ -232,7 +232,6 @@ public class AutoPipeLine extends OpenCvPipeline {
         int tx = (int) boundingBox.x;
         int ty = (int) boundingBox.y;
 
-
         return new Point(tx, ty);
     }
 

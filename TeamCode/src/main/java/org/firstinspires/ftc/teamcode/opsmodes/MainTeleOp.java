@@ -7,8 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.pipelines.AutoPipeLine;
+import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Marker;
+import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
+import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
+import org.opencv.core.Point;
 
 @TeleOp(name= "TeleOp")
 public class MainTeleOp extends LinearOpMode {
@@ -24,6 +30,28 @@ public class MainTeleOp extends LinearOpMode {
 
     private boolean armChangerHeld = false;
     private boolean clawChangerHeld = false;
+
+    RoadRunnerHelper roadRunnerHelper;
+    SampleMecanumDrive mecanumDrive;
+    OpenCVManager cam;
+    AutoPipeLine autoPipeLine;
+
+    private static final double TARGET_X = 320;
+    private static final double TARGET_Y = 240;
+
+    private static final double ITS_OK_TOLERANCE = 50.0;
+
+    boolean assistDriver = false;
+
+    private enum AutoState {
+        SEEK,
+        ALIGN_X,
+        ALIGN_Y
+    }
+
+    private AutoState currentAssistStage = AutoState.SEEK;
+
+    int posX, posY;
 
     private void initHardware() {
         leftFrontDrive = hardwareMap.get(DcMotorEx.class,"leftFront");
@@ -41,6 +69,15 @@ public class MainTeleOp extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        mecanumDrive = new SampleMecanumDrive(hardwareMap);
+
+        roadRunnerHelper = new RoadRunnerHelper(mecanumDrive);
+
+        cam = new OpenCVManager(hardwareMap);
+
+        autoPipeLine = new AutoPipeLine(Marker.RED, new Point(TARGET_X, TARGET_Y));
+        cam.setPipeline(autoPipeLine);
+
         arm = new Arm(hardwareMap);
 
         claw = new Claw(hardwareMap);
@@ -57,6 +94,89 @@ public class MainTeleOp extends LinearOpMode {
             updateArm();
             updateClaw();
             updateDriveMotors();
+
+            telemetry.addData("POSX", autoPipeLine.getX());
+            telemetry.addData("POSY", autoPipeLine.getY());
+
+            if(!assistDriver) {
+                updateArm();
+                updateClaw();
+                updateDriveMotors();
+            }else{
+                switch(currentAssistStage){
+                    case SEEK:
+                        telemetry.addLine("==== CHOOSING PIECE TO LOCK ON TO ====");
+                        posX = autoPipeLine.getX();
+                        posY = autoPipeLine.getY();
+                        autoPipeLine.lockOnPoint(new Point(posX, posY));
+                        currentAssistStage = AutoState.ALIGN_X;
+                        break;
+                    case ALIGN_X:
+                        telemetry.addLine("==== ALIGN ON X ====");
+                        Point newLock = new Point(autoPipeLine.getX(), autoPipeLine.getY());//autoPipeLine.getClosestToLockOn();
+                        telemetry.addLine("--- LOCK ON POS: ");
+                        telemetry.addData("POS X", newLock.x);
+                        telemetry.addData("POS Y", newLock.y);
+                        Point alX = new Point(newLock.x , 0);
+                        double dist = AutoPipeLine.getDist(alX, new Point(TARGET_X, 0));
+                        if(dist < ITS_OK_TOLERANCE){
+                            currentAssistStage = AutoState.ALIGN_Y;
+                        }else{
+                            if(TARGET_X < alX.x){
+                                telemetry.addLine("Target is greater than our pos, so we're");
+                                telemetry.addLine("going to [Strafe Left]");
+                                roadRunnerHelper.strafeRight(0.3);
+                            }else if(TARGET_X > alX.x){
+                                telemetry.addLine("Target is less than our pos, so we're");
+                                telemetry.addLine("going to [Strafe Right]");
+                                roadRunnerHelper.strafeLeft(0.3);
+                            }
+                            autoPipeLine.lockOnPoint(newLock);
+                        }
+                        break;
+                    case ALIGN_Y:
+                        telemetry.addLine("==== ALIGN ON Y ====");
+                        Point newLockY = new Point(autoPipeLine.getX(), autoPipeLine.getY()); //autoPipeLine.getClosestToLockOn();
+                        telemetry.addLine("--- LOCK ON POS: ");
+                        telemetry.addData("POS X", newLockY.x);
+                        telemetry.addData("POS Y", newLockY.y);
+                        Point alY = new Point(0 , newLockY.y);
+                        double distY = AutoPipeLine.getDist(alY, new Point(0, TARGET_Y));
+                        if(distY < ITS_OK_TOLERANCE){
+                            assistDriver = false;
+                        }else{
+                            if(TARGET_Y > alY.y){
+                                telemetry.addLine("Target is greater than our pos, so we're");
+                                telemetry.addLine("going to [Go Back]");
+                                arm.armAppendDist(-10);
+                               // roadRunnerHelper.forward(0.5);
+                            }else if(TARGET_Y < alY.y){
+                                telemetry.addLine("Target is less than our pos, so we're");
+                                telemetry.addLine("going to [Go Forward]");
+                                arm.armAppendDist(10);
+                               // roadRunnerHelper.reverse(-0.5);
+                            }
+                            autoPipeLine.lockOnPoint(newLockY);
+                        }
+                        break;
+                }
+            }
+            driverAssist();
+            telemetry.update();
+        }
+    }
+
+    boolean assistButtonPressed = false;
+    private void driverAssist() {
+        if(gamepad1.a && !assistButtonPressed){
+            assistButtonPressed = true;
+            roadRunnerHelper.resetPath();
+            assistDriver = true;
+            currentAssistStage = AutoState.SEEK;
+        }else if(!gamepad1.a){
+            assistButtonPressed = false;
+            assistDriver = false;
+            currentAssistStage = AutoState.SEEK;
         }
     }
 
@@ -182,10 +302,11 @@ public class MainTeleOp extends LinearOpMode {
         if (gamepad1.dpad_right || gamepad2.dpad_right)
             lateral += 0.3;
 
-        if (gamepad1.left_bumper)
-            yaw += 0.1 * -1;
         if (gamepad1.right_bumper)
-            yaw -= 0.1 * -1;
+            yaw -= 0.3 * -1;
+        if (gamepad1.left_bumper) {
+            yaw += 0.3 * -1;
+        }
 
         double leftFrontPower = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
