@@ -118,6 +118,8 @@ public abstract class AutoBase extends LinearOpMode {
             throw new RuntimeException(e);
         }
 
+        scriptingWebPortal.stopRunning();
+
         // Relaunch everything
         //runOpMode();
     }

@@ -25,6 +25,8 @@ public class Claw {
 
     private float currentTargetPos = 0.0f;
 
+    private float currentWristPos = 0.0f;
+
     //private final Servo servoWrist;
     private final Servo servoClaw;
     private final Servo servoWrist;
@@ -43,7 +45,15 @@ public class Claw {
     }
 
     private void setWristPos(float pos){
-        servoWrist.setPosition(pos);
+        currentWristPos = pos;
+        if(currentWristPos < 0) currentWristPos = 0;
+        if(currentWristPos > 1) currentWristPos = 1;
+        servoWrist.setPosition(currentWristPos);
+    }
+
+    public void appendWristPos(float dist){
+        currentWristPos += dist;
+        setWristPos(currentWristPos);
     }
 
     public void wristLeft(){
@@ -54,7 +64,7 @@ public class Claw {
         setWristPos(POSITION_WRIST_RIGHT);
     }
 
-    private void wristCenter(){
+    public void wristCenter(){
         setWristPos(POSITION_WRIST_CENTER);
     }
 

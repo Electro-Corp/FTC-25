@@ -39,7 +39,7 @@ public class Arm {
 
 
     public static final int SLIDE_MIN = 0;
-    public static final int SLIDE_MAX = 2400;
+    public static final int SLIDE_MAX = 2600;
 
     private double pitchPos = 0.0f;
 
@@ -146,6 +146,8 @@ public class Arm {
     public void setArmPos(int x) {
         setArmPos(x, 0.7);
     }
+
+    public void setArmPosFast(int x){setArmPos(x, 1.0);}
 
     public void setArmPos(int x, double speed) {
         armPos = x;

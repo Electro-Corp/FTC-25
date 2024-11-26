@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.jbbfi;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIClassNotFoundException;
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIInvalidFunctionException;
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIScriptNotFoundException;
@@ -31,6 +32,7 @@ public class JBBFI {
     public String funcRunCur = "No function run";
 
     int currentLine = 0;
+
 
     public JBBFI(String fileName) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         try {
