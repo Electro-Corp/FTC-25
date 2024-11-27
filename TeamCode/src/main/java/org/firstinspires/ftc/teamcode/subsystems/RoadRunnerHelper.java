@@ -18,8 +18,8 @@ public class RoadRunnerHelper<T>{
 
     public static final int TILE_SIZE_IN = 24;
 
-    public static final int DEFAULT_VEL = 28;
-    public static final int DEFAULT_ANG_VEL = 7;
+    public static final int DEFAULT_VEL = 43;
+    public static final int DEFAULT_ANG_VEL = 15;
     public static final int REVERSE_FAST = 60;
 
 
@@ -135,6 +135,15 @@ public class RoadRunnerHelper<T>{
      * @return
      */
     public RoadRunnerHelper splineToLinearHeading(double x, double y, double ang){
+        Trajectory traj = drive.trajectoryBuilder(pose).splineToLinearHeading(new Pose2d(x, y, Math.toRadians(ang)), 0).build();
+        drive.followTrajectory(traj);
+        pose = traj.end();
+        return this;
+    }
+
+    public RoadRunnerHelper splineToLinearHeadingJBBFI(double x, double y, double ang, int flipX, int flipY){
+        if(flipX == 1) x *= -1;
+        if(flipY == 1) y *= -1;
         Trajectory traj = drive.trajectoryBuilder(pose).splineToLinearHeading(new Pose2d(x, y, Math.toRadians(ang)), 0).build();
         drive.followTrajectory(traj);
         pose = traj.end();

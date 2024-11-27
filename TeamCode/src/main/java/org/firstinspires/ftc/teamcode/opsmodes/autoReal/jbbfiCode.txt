@@ -1,3 +1,83 @@
+function moveToClipPositionClose
+driveHelper::resetPath()
+//driveHelper::splineToLinearHeadingJBBFI(31,24,0,1,0)
+arm::pitchSet(0.176999)
+arm::setArmPos(800)
+driveHelper::forward(24)
+driveHelper::strafeRight(31)
+goto clipThing
+function_end
+
+function swag
+claw::openClaw()
+me::pause(2000)
+claw::openClaw()
+function_end
+
+function clipThing
+claw::wristLeft()
+driveHelper::forward(3.9)
+me::pause(700)
+arm::pitchSet(0.2)
+arm::setArmPos(0)
+me::pause(800)
+claw::openClaw()
+driveHelper::reverse(4)
+goto wow
+function_end
+
+function wow
+arm::pitchSet(0.2884)
+driveHelper::reverse(14)
+driveHelper::turn(270)
+driveHelper::forward(60)
+claw::openClaw()
+me::pause(500)
+arm::pitchSet(0.176999)
+arm::setArmPos(800)
+driveHelper::reverse(59)
+driveHelper::turn(90)
+driveHelper::forward(14)
+goto yellow
+function_end
+
+function yellow
+claw::wristLeft()
+driveHelper::forward(3.9)
+me::pause(500)
+arm::pitchSet(0.2)
+arm::setArmPos(0)
+me::pause(800)
+claw::openClaw()
+driveHelper::reverse(3.9)
+goto pushToTape
+function_end
+
+function pushToTape
+driveHelper::reverse(14)
+driveHelper::turn(270)
+driveHelper::forward(37)
+driveHelper::strafeLeft(48)
+driveHelper::forward(6)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(50)
+driveHelper::forward(6)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(50)
+driveHelper::forward(7)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(10)
+driveHelper::reverse(5)
+function_end
+
+
+
+function resetThing
+arm::pitchGrabSeek()
+driveHelper::reset()
+arm::setArmPos(0)
+function_end
+
 function moveToBuckIniCLOSE
 //driveHelper::forward(14)
 //driveHelper::strafeLeft(17)
@@ -26,7 +106,7 @@ arm::moveToBucket()
 me::pause(2500)
 arm::armAppendDist(80)
 me::pause(800)
-driveHelper::forward(14)
+driveHelper::forward(20)
 me::pause(500)
 arm::pitchAppend(0.05)
 me::pause(200)
@@ -36,7 +116,7 @@ me::pause(100)
 arm::moveToBucket()
 me::pause(600)
 claw::openClaw()
-driveHelper::reverse(14)
+driveHelper::reverse(17)
 driveHelper::turn(225)
 arm::setArmPosFast(1350)
 arm::pitchGrabSeek()
@@ -67,7 +147,7 @@ arm::moveToBucket()
 me::pause(2500)
 arm::armAppendDist(30)
 me::pause(800)
-driveHelper::forward(16)
+driveHelper::forward(20)
 me::pause(300)
 arm::pitchAppend(0.05)
 me::pause(200)
@@ -88,3 +168,11 @@ function_end
 function clo
 me::close()
 function_end
+
+
+
+
+
+
+
+

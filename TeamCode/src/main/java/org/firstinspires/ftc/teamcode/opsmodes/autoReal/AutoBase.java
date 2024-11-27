@@ -31,6 +31,9 @@ public abstract class AutoBase extends LinearOpMode {
     ScriptingWebPortal scriptingWebPortal;
 
 
+    int neg = -1;
+
+
 
     boolean alreadyLaunched = false;
 
@@ -74,6 +77,7 @@ public abstract class AutoBase extends LinearOpMode {
                 jbbfi.addGlobal(arm, "arm");
                 jbbfi.addGlobal(claw, "claw");
                 jbbfi.addGlobal(this, "me");
+                jbbfi.addGlobal(neg, "neg");
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);

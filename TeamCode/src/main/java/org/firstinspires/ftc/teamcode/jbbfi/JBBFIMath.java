@@ -28,9 +28,10 @@ public class JBBFIMath {
     public double multiply(Double one, Double two){
         return one * two;
     }
-    public int multiply(Integer one, Integer two){
+
+    /*public int multiply(Integer one, Integer two){
         return one * two;
-    }
+    }*/
 
     /*
      * DIVIDE
