@@ -44,6 +44,17 @@ public class Claw {
         servoClaw.setPosition(pos);
     }
 
+    boolean wristParallel = true;
+    public void toggleWrist() {
+        if (wristParallel) {
+            wristRight();
+            wristParallel = false;
+        } else {
+            wristCenter();
+            wristParallel = true;
+        }
+    }
+
     private void setWristPos(float pos){
         currentWristPos = pos;
         if(currentWristPos < 0) currentWristPos = 0;
@@ -58,14 +69,17 @@ public class Claw {
 
     public void wristLeft(){
         setWristPos(POSITION_WRIST_LEFT);
+        wristParallel = false;
     }
 
     public void wristRight(){
         setWristPos(POSITION_WRIST_RIGHT);
+        wristParallel = false;
     }
 
     public void wristCenter(){
         setWristPos(POSITION_WRIST_CENTER);
+        wristParallel = true;
     }
 
     public void openClaw(){

@@ -185,46 +185,28 @@ public class MainTeleOp extends LinearOpMode {
     boolean yPressed = false, aPressed = false;
     boolean extendSlide = false, fish = false;
     boolean bucketYesNo = false;
+
     private void updateArm(){
         arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
 
         if(gamepad2.right_bumper && !lf) {
             lf = true;
-            if(!clipOnYesNo) {
-                arm.clipOn();
-                clipOnYesNo = true;
-            } else {
-                arm.setArmPos(SLIDE_MIN);
-                arm.pitchGrabSeek();
-                clipOnYesNo = false;
-            }
+            arm.clipOn();
         } else if(!gamepad2.right_bumper) {
             lf = false;
         }
 
        if(gamepad2.left_bumper && !armChangerHeld){
             armChangerHeld = true;
-            if(!bucketYesNo) {
-                arm.moveToBucket();
-                bucketYesNo = true;
-            } else {
-                arm.setArmPos(SLIDE_MIN);
-                arm.pitchGrabSeek();
-                bucketYesNo = false;
-            }
+            arm.moveToBucket();
         } else if(!gamepad2.left_bumper) {
             armChangerHeld = false;
         }
 
         if(gamepad2.y && !yPressed){
             yPressed = true;
-            if(!extendSlide) {
-                arm.setArmPos(arm.SLIDE_MAX / 2);
-                extendSlide = true;
-            } else {
-                arm.setArmPos(0);
-                extendSlide = false;
-            }
+            arm.wallGrab();
+            claw.wristRight();
         } else if(!gamepad2.y) {
             yPressed = false;
         }
@@ -237,6 +219,14 @@ public class MainTeleOp extends LinearOpMode {
             }else{
                 fish = false;
                 arm.pitchGoToPitchSeek();
+            }
+
+            if(!extendSlide) {
+                arm.setArmPos(arm.SLIDE_MAX / 2);
+                extendSlide = true;
+            } else {
+                arm.setArmPos(0);
+                extendSlide = false;
             }
         }else if(!gamepad2.a){
             aPressed = false;
@@ -256,7 +246,7 @@ public class MainTeleOp extends LinearOpMode {
     private void updateClaw(){
         if(gamepad2.b && !bNotHeld){
             bNotHeld = true;
-            claw.wristCenter();
+            claw.toggleWrist();
         }else if(!gamepad2.b){
             bNotHeld = false;
         }

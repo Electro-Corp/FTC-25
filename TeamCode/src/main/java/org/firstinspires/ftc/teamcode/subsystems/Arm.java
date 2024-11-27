@@ -24,12 +24,13 @@ public class Arm {
 
 
     private final double PitchStop = 0.07;
+    private final double pitchWallGrab = 0.308;
     private final double PitchSeek = 0.35;
     private final double PitchGrabSeek = 0.35;//0.23;
     private final double Grab = 0.5;
 
     // Auto Pos for Clipon
-    private final double pitchClipPos = 0.22;
+    private final double pitchClipPos = 0.225;
     private final int slidePosClipOn = 1988;
 
     // Auto pos for Bucket
@@ -40,6 +41,7 @@ public class Arm {
 
     public static final int SLIDE_MIN = 0;
     public static final int SLIDE_MAX = 2600;
+    public static final int slideWallGrab = 2200;
 
     private double pitchPos = 0.0f;
 
@@ -107,6 +109,13 @@ public class Arm {
         pitchSet(Grab);
     }
 
+    public void wallGrab() {
+        pitchPos = pitchWallGrab;
+        pitchSet(pitchPos);
+
+        armPos = slideWallGrab;
+        setArmPos(armPos);
+    }
 
     public void clipOn(){
         pitchPos = pitchClipPos;
