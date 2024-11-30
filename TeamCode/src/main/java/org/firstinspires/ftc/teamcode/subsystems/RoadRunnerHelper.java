@@ -99,6 +99,11 @@ public class RoadRunnerHelper<T>{
         return this;
     }
 
+    public RoadRunnerHelper turnOp(double angle){
+        turn(-1 * angle, DEFAULT_ANG_VEL, DEFAULT_ANG_VEL);
+        return this;
+    }
+
     /**
      * Turn to angle with speed (positive is turning left)
      * @param angle Turn angle (in degrees)

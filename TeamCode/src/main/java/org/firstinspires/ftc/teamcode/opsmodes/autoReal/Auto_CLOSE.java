@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Auto_CLOSE extends AutoBase{
     @Override
     public void moveToBucketInit()  {
-        runFunc("moveToBuckIniCLOSE");
+        runFunc("moveToClipPositionClose");
     }
 
     //public abstract void getSideColor();

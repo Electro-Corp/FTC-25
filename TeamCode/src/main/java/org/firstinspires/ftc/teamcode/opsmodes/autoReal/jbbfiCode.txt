@@ -3,7 +3,7 @@ driveHelper::resetPath()
 //driveHelper::splineToLinearHeadingJBBFI(31,24,0,1,0)
 arm::pitchSet(0.176999)
 arm::setArmPos(800)
-driveHelper::forward(24)
+driveHelper::forward(22)
 driveHelper::strafeRight(31)
 goto clipThing
 function_end
@@ -28,16 +28,19 @@ function_end
 
 function wow
 arm::pitchSet(0.2884)
-driveHelper::reverse(14)
-driveHelper::turn(270)
+driveHelper::turnOp(90)
+driveHelper::strafeRight(24)
 driveHelper::forward(60)
+me::pause(500)
 claw::openClaw()
+me::pause(1000)
+driveHelper::forward(2)
 me::pause(500)
 arm::pitchSet(0.176999)
 arm::setArmPos(800)
-driveHelper::reverse(59)
+driveHelper::reverse(61)
+driveHelper::strafeLeft(24)
 driveHelper::turn(90)
-driveHelper::forward(14)
 goto yellow
 function_end
 
@@ -55,8 +58,8 @@ function_end
 
 function pushToTape
 driveHelper::reverse(14)
-driveHelper::turn(270)
-driveHelper::forward(37)
+driveHelper::turnOp(90)
+driveHelper::forward(35)
 driveHelper::strafeLeft(48)
 driveHelper::forward(6)
 driveHelper::strafeRight(50)
@@ -168,11 +171,3 @@ function_end
 function clo
 me::close()
 function_end
-
-
-
-
-
-
-
-

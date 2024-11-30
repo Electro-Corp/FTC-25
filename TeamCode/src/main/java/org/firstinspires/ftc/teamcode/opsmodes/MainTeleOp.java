@@ -112,7 +112,22 @@ public class MainTeleOp extends LinearOpMode {
                         currentAssistStage = AutoState.ALIGN_X;
                         break;
                     case ALIGN_X:
-                        telemetry.addLine("==== ALIGN ON X ====");
+                        telemetry.addLine("=== SPLINE TO ===");
+                        Point lockON = new Point(autoPipeLine.getX(), autoPipeLine.getY());
+                        double dist = AutoPipeLine.getDist(lockON, new Point(TARGET_X, TARGET_Y));
+                        if(dist < ITS_OK_TOLERANCE){
+                            claw.openClaw();
+                            arm.pitchGoToGrab();
+                            assistDriver = false;
+                            currentAssistStage = AutoState.ALIGN_Y;
+                        }else {
+                            roadRunnerHelper.resetPath();
+                            double distX = lockON.x - TARGET_X;
+                            double distY = TARGET_Y - lockON.y;
+                            roadRunnerHelper.splineToLinearHeading(distX, distY, 0);
+                        }
+
+                        /*telemetry.addLine("==== ALIGN ON X ====");
                         Point newLock = new Point(autoPipeLine.getX(), autoPipeLine.getY());//autoPipeLine.getClosestToLockOn();
                         telemetry.addLine("--- LOCK ON POS: ");
                         telemetry.addData("POS X", newLock.x);
@@ -143,22 +158,22 @@ public class MainTeleOp extends LinearOpMode {
                         Point alY = new Point(0 , newLockY.y);
                         double distY = AutoPipeLine.getDist(alY, new Point(0, TARGET_Y));
                         if(distY < ITS_OK_TOLERANCE){
+                            claw.openClaw();
+                            arm.pitchGoToGrab();
                             assistDriver = false;
                         }else{
                             if(TARGET_Y > alY.y){
                                 telemetry.addLine("Target is greater than our pos, so we're");
                                 telemetry.addLine("going to [Go Back]");
-                                arm.armAppendDist(-10);
-                               // roadRunnerHelper.forward(0.5);
+                                roadRunnerHelper.reverse(0.5);
                             }else if(TARGET_Y < alY.y){
                                 telemetry.addLine("Target is less than our pos, so we're");
                                 telemetry.addLine("going to [Go Forward]");
-                                arm.armAppendDist(10);
-                               // roadRunnerHelper.reverse(-0.5);
+                                roadRunnerHelper.forward(-0.5);
                             }
                             autoPipeLine.lockOnPoint(newLockY);
                         }
-                        break;
+                        break;*/
                 }
             }
             driverAssist();
