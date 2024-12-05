@@ -15,18 +15,15 @@ public class Arm {
     private final DcMotorEx armExtender;
     private final Servo upDown;
 
-
-
     private static final float POSITION_GROUND = 0;
     private static final float POSITION_BUCKET = 1;
 
     private int armPos;
 
-
     private final double PitchStop = 0.07;
     private final double pitchWallGrab = 0.308;
-    private final double PitchSeek = 0.35;
-    private final double PitchGrabSeek = 0.35;//0.23;
+    private final double PitchSeek = 0.378;
+    private final double PitchGrabSeek = 0.38;//0.23;
     private final double Grab = 0.5;
 
     // Auto Pos for Clipon
@@ -38,14 +35,11 @@ public class Arm {
     private final double pitchBucketPos = 0.087;
     //private final int slidePosBucket;
 
-
     public static final int SLIDE_MIN = 0;
     public static final int SLIDE_MAX = 2600;
     public static final int slideWallGrab = 2200;
 
     private double pitchPos = 0.0f;
-
-
 
     public enum ArmState{
         TOP,
@@ -54,7 +48,6 @@ public class Arm {
     }
 
     private ArmState armState = ArmState.TOP;
-
 
     public Arm(HardwareMap hardwareMap) {
         this.armExtender = hardwareMap.get(DcMotorEx.class, HARDWARE_NAME_SLIDE);
@@ -67,8 +60,6 @@ public class Arm {
 
         setArmPos(SLIDE_MIN);
         armPos = SLIDE_MIN;
-
-
 
         pitchGrabSeek();
 

@@ -222,6 +222,7 @@ public class MainTeleOp extends LinearOpMode {
             yPressed = true;
             arm.wallGrab();
             claw.wristRight();
+            claw.openTeleOp();
         } else if(!gamepad2.y) {
             yPressed = false;
         }
@@ -257,7 +258,9 @@ public class MainTeleOp extends LinearOpMode {
 
     }
 
+    boolean yPressed2 = false;
     boolean bNotHeld = false;
+
     private void updateClaw(){
         if(gamepad2.b && !bNotHeld){
             bNotHeld = true;
