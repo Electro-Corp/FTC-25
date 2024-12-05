@@ -15,6 +15,9 @@ public class Arm {
     private final DcMotorEx armExtender;
     private final Servo upDown;
 
+    public int MAX_HORIZONTAL_EXTENSION = 500; // just some guess
+    public double ARM_HORIZONTAL_MAX = 0.2414; // literal bs i have no idea what it is, fill in with the number at which we dont consider it horizontal
+
     private static final float POSITION_GROUND = 0;
     private static final float POSITION_BUCKET = 1;
 
@@ -22,7 +25,7 @@ public class Arm {
 
     private final double PitchStop = 0.07;
     private final double pitchWallGrab = 0.308;
-    private final double PitchSeek = 0.378;
+    private final double PitchSeek = 0.375;
     private final double PitchGrabSeek = 0.38;//0.23;
     private final double Grab = 0.5;
 
@@ -150,6 +153,10 @@ public class Arm {
     public void setArmPosFast(int x){setArmPos(x, 1.0);}
 
     public void setArmPos(int x, double speed) {
+        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos < ARM_HORIZONTAL_MAX){
+            return;
+        }
+
         armPos = x;
         armExtender.setTargetPosition(x);
         armExtender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -165,6 +172,9 @@ public class Arm {
     }
 
     public void armAppendDist(int dist){
+        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos < ARM_HORIZONTAL_MAX){
+            return;
+        }
         armPos += dist;
         if(armPos > SLIDE_MAX){
             armPos = SLIDE_MAX;
