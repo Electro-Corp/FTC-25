@@ -70,6 +70,8 @@ public abstract class AutoBase extends LinearOpMode {
             Arm arm = new Arm(hardwareMap);
             Claw claw = new Claw(hardwareMap);
 
+            claw.closeTheClaw();
+
 
             try {
                 jbbfi = new JBBFI("/sdcard/scripting/test.jbbfi", hardwareMap);
@@ -93,6 +95,7 @@ public abstract class AutoBase extends LinearOpMode {
         String[] loadedObjects = jbbfi.getObjectNames();
 
         String objectsList = String.format("%s", Arrays.toString(loadedObjects));
+
 
         while(!isStarted() && !isStopRequested()) {
             if(scriptingWebPortal.isAlive()){
