@@ -15,8 +15,8 @@ public class Claw {
     public static final String SERVO_WRIST = "WristServo";
     public static final String SERVO_CLAW = "ClawServo ";
 
-    private static final float POSITION_CLAW_OPENED = 0.60f;
-    private static final float POSITION_CLAW_CLOSED = 0.98f;
+    private static final float POSITION_CLAW_OPENED = 0.62f;
+    private static final float POSITION_CLAW_CLOSED = 1.0f; //0.98f;
     private static final float POSITION_WRIST_CENTERED = .5f;
 
     private static final float POSITION_WRIST_LEFT = 0.84f;

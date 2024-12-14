@@ -6,10 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.jbbfi.JBBFI;
 import org.firstinspires.ftc.teamcode.jbbfi.ScriptingWebPortal;
+import org.firstinspires.ftc.teamcode.pipelines.AutoPipeLine;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Marker;
+import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
+import org.opencv.core.Point;
 
 import java.util.Arrays;
 
@@ -29,6 +33,11 @@ public abstract class AutoBase extends LinearOpMode {
 
     JBBFI jbbfi;
     ScriptingWebPortal scriptingWebPortal;
+
+    OpenCVManager cam;
+    AutoPipeLine autoPipeLine;
+
+    RoadRunnerHelper roadRunnerHelper;
 
 
     int neg = -1;
@@ -65,11 +74,15 @@ public abstract class AutoBase extends LinearOpMode {
 
             // Create drivehelper
             SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-            RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
+            roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
 
             Arm arm = new Arm(hardwareMap);
             Claw claw = new Claw(hardwareMap);
 
+            cam = new OpenCVManager(hardwareMap);
+
+            autoPipeLine = new AutoPipeLine(Marker.RED, new Point(250, 250));
+            cam.setPipeline(autoPipeLine);
 
             try {
                 jbbfi = new JBBFI("/sdcard/scripting/test.jbbfi", hardwareMap);
@@ -137,6 +150,17 @@ public abstract class AutoBase extends LinearOpMode {
         }
     }
 
+
+    /*
+        x and y are the desired screen space coordinates
+     */
+    public void align(int x, int y){
+        // Align bot to get this thing into the center
+        Point lockON = new Point(autoPipeLine.getX(), autoPipeLine.getY());
+        double distX = lockON.x - x;
+        double distY = y - lockON.y;
+        roadRunnerHelper.splineToLinearHeading(distX, distY, 0);
+    }
 
     public abstract void moveToBucketInit();
 
