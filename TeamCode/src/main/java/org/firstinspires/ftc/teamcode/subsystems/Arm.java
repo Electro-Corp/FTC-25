@@ -15,8 +15,8 @@ public class Arm {
     private final DcMotorEx armExtender;
     private final Servo upDown;
 
-    public int MAX_HORIZONTAL_EXTENSION = 500; // just some guess
-    public double ARM_HORIZONTAL_MAX = 0.2414; // literal bs i have no idea what it is, fill in with the number at which we dont consider it horizontal
+    public int MAX_HORIZONTAL_EXTENSION = 2400 ; // just some guess
+    public double ARM_HORIZONTAL_MAX = 0.224499; // literal bs i have no idea what it is, fill in with the number at which we dont consider it horizontal
 
     private static final float POSITION_GROUND = 0;
     private static final float POSITION_BUCKET = 1;
@@ -27,6 +27,8 @@ public class Arm {
     private final double pitchWallGrab = 0.308;
     private final double PitchSeek = 0.375;
     private final double PitchGrabSeek = 0.38;//0.23;
+
+    private final double PitchInit = 0.421;
     private final double Grab = 0.5;
 
     // Auto Pos for Clipon
@@ -64,7 +66,7 @@ public class Arm {
         setArmPos(SLIDE_MIN);
         armPos = SLIDE_MIN;
 
-        pitchGrabSeek();
+        pitchSet(PitchInit);
 
     }
 
@@ -81,6 +83,9 @@ public class Arm {
 
     public void pitchSet(double pos){
         if(pos > PitchStop){
+            if(pos < ARM_HORIZONTAL_MAX){
+                setArmPos(MAX_HORIZONTAL_EXTENSION);
+            }
             upDown.setPosition(pos);
         }
     }
@@ -153,7 +158,7 @@ public class Arm {
     public void setArmPosFast(int x){setArmPos(x, 1.0);}
 
     public void setArmPos(int x, double speed) {
-        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos < ARM_HORIZONTAL_MAX){
+        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && armPos < x){
             return;
         }
 
@@ -172,7 +177,7 @@ public class Arm {
     }
 
     public void armAppendDist(int dist){
-        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos < ARM_HORIZONTAL_MAX){
+        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && (armPos + dist) > armPos){
             return;
         }
         armPos += dist;

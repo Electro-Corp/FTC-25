@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIUnknownKeywordExcept
 
 import java.lang.reflect.InvocationTargetException;
 
-@Autonomous(group="drive", name="AUTO_CLOSE")
+@Autonomous(group="drive", name="AUTO_LEFT")
 public class Auto_CLOSE extends AutoBase{
     @Override
     public void moveToBucketInit()  {

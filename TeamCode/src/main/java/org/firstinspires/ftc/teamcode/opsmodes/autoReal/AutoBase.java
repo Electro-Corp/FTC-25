@@ -74,7 +74,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             // Create drivehelper
             SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-            roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
+            RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
 
             Arm arm = new Arm(hardwareMap);
             Claw claw = new Claw(hardwareMap);
@@ -83,6 +83,8 @@ public abstract class AutoBase extends LinearOpMode {
 
             autoPipeLine = new AutoPipeLine(Marker.RED, new Point(250, 250));
             cam.setPipeline(autoPipeLine);
+            claw.closeTheClaw();
+
 
             try {
                 jbbfi = new JBBFI("/sdcard/scripting/test.jbbfi", hardwareMap);
