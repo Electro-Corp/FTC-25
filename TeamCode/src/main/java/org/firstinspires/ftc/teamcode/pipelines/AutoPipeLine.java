@@ -56,13 +56,13 @@ public class AutoPipeLine extends OpenCvPipeline {
 
         Imgproc.cvtColor(input, hsvMat, Imgproc.COLOR_RGB2HSV);
 
-        Scalar lowHSV = new Scalar(marker.getHueMin(), 120, 80); // FILL IN WITH VALS
+        Scalar lowHSV = new Scalar(marker.getHueMin(), 80, 80); // FILL IN WITH VALS
         Scalar highHSV = new Scalar(marker.getHueMax(), 255, 255);
 
         Core.inRange(hsvMat, lowHSV, highHSV, hsvThresholdMat);
 
-        if(marker.getHueWrapAroundMin() > 1) {
-            lowHSV = new Scalar(marker.getHueWrapAroundMin(), 120, 100); // FILL IN WITH VALS
+        if(marker.getHueWrapAroundMin() > -1) {
+            lowHSV = new Scalar(marker.getHueWrapAroundMin(), 80, 80); // FILL IN WITH VALS
             highHSV = new Scalar(marker.getHueWrapAroundMax(), 255, 255);
 
             Core.inRange(hsvMat, lowHSV, highHSV, hsvThresholdMat);
@@ -79,7 +79,7 @@ public class AutoPipeLine extends OpenCvPipeline {
 
         MatOfPoint closest = null;
         if(contourPoints.size() > 0)
-            closest = contourPoints.get(getClosestToPoint(contourPoints));
+            closest = contourPoints.get(getLargestContourSize(contourPoints));
 
         if(closest != null){
             // It exist so get its position

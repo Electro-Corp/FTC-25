@@ -39,7 +39,7 @@ public class MainTeleOp extends LinearOpMode {
     private static final double TARGET_X = 320;
     private static final double TARGET_Y = 240;
 
-    private static final double ITS_OK_TOLERANCE = 50.0;
+    private static final double ITS_OK_TOLERANCE = 0.0005;
 
     boolean assistDriver = false;
 
@@ -117,63 +117,17 @@ public class MainTeleOp extends LinearOpMode {
                         double dist = AutoPipeLine.getDist(lockON, new Point(TARGET_X, TARGET_Y));
                         if(dist < ITS_OK_TOLERANCE){
                             claw.openClaw();
-                            arm.pitchGoToGrab();
+                            arm.pitchGoToPitchSeek();
                             assistDriver = false;
                             currentAssistStage = AutoState.ALIGN_Y;
                         }else {
                             roadRunnerHelper.resetPath();
+                            int xConst = 88 * (lockON.x > TARGET_X ? 1 : -1);
+                            int yConst = 64 * (lockON.y > TARGET_Y ? -1 : 1);
                             double distX = lockON.x - TARGET_X;
                             double distY = TARGET_Y - lockON.y;
-                            roadRunnerHelper.splineToLinearHeading(distX, distY, 0);
+                            roadRunnerHelper.splineToLinearHeading(lockON.x / xConst, lockON.y / yConst, 0);
                         }
-
-                        /*telemetry.addLine("==== ALIGN ON X ====");
-                        Point newLock = new Point(autoPipeLine.getX(), autoPipeLine.getY());//autoPipeLine.getClosestToLockOn();
-                        telemetry.addLine("--- LOCK ON POS: ");
-                        telemetry.addData("POS X", newLock.x);
-                        telemetry.addData("POS Y", newLock.y);
-                        Point alX = new Point(newLock.x , 0);
-                        double dist = AutoPipeLine.getDist(alX, new Point(TARGET_X, 0));
-                        if(dist < ITS_OK_TOLERANCE){
-                            currentAssistStage = AutoState.ALIGN_Y;
-                        }else{
-                            if(TARGET_X < alX.x){
-                                telemetry.addLine("Target is greater than our pos, so we're");
-                                telemetry.addLine("going to [Strafe Left]");
-                                roadRunnerHelper.strafeRight(0.3);
-                            }else if(TARGET_X > alX.x){
-                                telemetry.addLine("Target is less than our pos, so we're");
-                                telemetry.addLine("going to [Strafe Right]");
-                                roadRunnerHelper.strafeLeft(0.3);
-                            }
-                            autoPipeLine.lockOnPoint(newLock);
-                        }
-                        break;
-                    case ALIGN_Y:
-                        telemetry.addLine("==== ALIGN ON Y ====");
-                        Point newLockY = new Point(autoPipeLine.getX(), autoPipeLine.getY()); //autoPipeLine.getClosestToLockOn();
-                        telemetry.addLine("--- LOCK ON POS: ");
-                        telemetry.addData("POS X", newLockY.x);
-                        telemetry.addData("POS Y", newLockY.y);
-                        Point alY = new Point(0 , newLockY.y);
-                        double distY = AutoPipeLine.getDist(alY, new Point(0, TARGET_Y));
-                        if(distY < ITS_OK_TOLERANCE){
-                            claw.openClaw();
-                            arm.pitchGoToGrab();
-                            assistDriver = false;
-                        }else{
-                            if(TARGET_Y > alY.y){
-                                telemetry.addLine("Target is greater than our pos, so we're");
-                                telemetry.addLine("going to [Go Back]");
-                                roadRunnerHelper.reverse(0.5);
-                            }else if(TARGET_Y < alY.y){
-                                telemetry.addLine("Target is less than our pos, so we're");
-                                telemetry.addLine("going to [Go Forward]");
-                                roadRunnerHelper.forward(-0.5);
-                            }
-                            autoPipeLine.lockOnPoint(newLockY);
-                        }
-                        break;*/
                 }
             }
             driverAssist();

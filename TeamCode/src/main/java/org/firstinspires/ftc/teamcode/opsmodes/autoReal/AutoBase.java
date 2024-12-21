@@ -157,7 +157,7 @@ public abstract class AutoBase extends LinearOpMode {
         x and y are the desired screen space coordinates
      */
     public void align(int x, int y){
-        // Align bot to get this thing into the center
+        // Align bot to get this large thingy into the desired position
         Point lockON = new Point(autoPipeLine.getX(), autoPipeLine.getY());
         double distX = lockON.x - x;
         double distY = y - lockON.y;
