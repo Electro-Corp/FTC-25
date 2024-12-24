@@ -20,7 +20,7 @@ public class PipelineViewer extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         OpenCVManager manager = new OpenCVManager(hardwareMap);
-        AutoPipeLine autoPipeLine = new AutoPipeLine(Marker.RED, new Point(320, 240));
+        AutoPipeLine autoPipeLine = new AutoPipeLine(Marker.YELLOW, new Point(320, 240));
         manager.setPipeline(autoPipeLine);
 
         waitForStart();

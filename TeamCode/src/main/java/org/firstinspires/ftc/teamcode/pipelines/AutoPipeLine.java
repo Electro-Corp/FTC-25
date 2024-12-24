@@ -49,6 +49,9 @@ public class AutoPipeLine extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat inputRaw) {
+
+        contourPoints.clear();
+
         Imgproc.cvtColor(inputRaw, hsvMat, Imgproc.COLOR_RGB2HSV);
 
         //Rect roi = new Rect(0, (inputRaw.rows() / 3), inputRaw.cols(), inputRaw.rows() - ((inputRaw.rows() / 3)));
@@ -82,6 +85,7 @@ public class AutoPipeLine extends OpenCvPipeline {
             closest = contourPoints.get(getLargestContourSize(contourPoints));
 
         if(closest != null){
+
             // It exist so get its position
 
             Moments moment = Imgproc.moments(closest);
@@ -184,12 +188,20 @@ public class AutoPipeLine extends OpenCvPipeline {
                     2
             );
 
+            //Mat hsvThreeChannel = new Mat();
+            //Imgproc.cvtColor(hsvThresholdMat, hsvThreeChannel, Imgproc.COLOR_GRAY2BGR);
+
+
+            //Imgproc.blendLinear(inputRaw, hsvThresholdMat, blendMat, 0, );
+            //Core.addWeighted(inputRaw, 0.5, hsvThreeChannel, 0.5, 0.0, inputRaw);
+
+            Imgproc.drawContours(inputRaw, contourPoints, -1, new Scalar(255,0, 0));
 
             return inputRaw;
         }
 
 
-        return hsvThresholdMat;
+        return inputRaw;
     }
 
     private int getLargestContourSize(List<MatOfPoint> contours) {

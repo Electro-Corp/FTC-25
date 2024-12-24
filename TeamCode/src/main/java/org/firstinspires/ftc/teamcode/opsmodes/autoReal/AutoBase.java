@@ -81,7 +81,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             cam = new OpenCVManager(hardwareMap);
 
-            autoPipeLine = new AutoPipeLine(Marker.RED, new Point(250, 250));
+            autoPipeLine = new AutoPipeLine(Marker.YELLOW, new Point(250, 250));
             cam.setPipeline(autoPipeLine);
             claw.closeTheClaw();
 

@@ -14,6 +14,9 @@ public class OpenCVManager implements OpenCvCamera.AsyncCameraOpenListener {
 
     private OpenCvCamera camera;
 
+    // if anyone tells me to make getters and setters for these im gonna lose it
+    public static int WIDTH = 640, HEIGHT = 480;
+
 
     public OpenCVManager(HardwareMap hardwareMap){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -33,7 +36,7 @@ public class OpenCVManager implements OpenCvCamera.AsyncCameraOpenListener {
 
     @Override
     public void onOpened() {
-        camera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+        camera.startStreaming(WIDTH, HEIGHT, OpenCvCameraRotation.UPRIGHT);
     }
 
     @Override

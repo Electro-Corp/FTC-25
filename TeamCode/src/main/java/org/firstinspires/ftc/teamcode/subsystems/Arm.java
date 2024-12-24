@@ -84,7 +84,8 @@ public class Arm {
     public void pitchSet(double pos){
         if(pos > PitchStop){
             if(pos < ARM_HORIZONTAL_MAX){
-                setArmPos(MAX_HORIZONTAL_EXTENSION);
+                if(armPos > MAX_HORIZONTAL_EXTENSION)
+                    setArmPos(MAX_HORIZONTAL_EXTENSION);
             }
             upDown.setPosition(pos);
         }

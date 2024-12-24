@@ -72,6 +72,10 @@ public class RoadRunnerHelper<T>{
     }
 
 
+    public RoadRunnerHelper forwardJBBFI(double dist, double speed){
+        return forward(dist, speed);
+    }
+
 
     public RoadRunnerHelper reverse(double dist){
         reverse(dist, DEFAULT_VEL);

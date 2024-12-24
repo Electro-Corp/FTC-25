@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 public enum Marker {
-    //YELLOW(15, 40, -1, 30);
+    YELLOW(20, 35, -1, 30),
     RED_OLD(165, 180, -1, 180),
     RED(0, 30, 160, 180),
-    BLUE(90, 100, -1, 110);
+    BLUE(100, 130, -1, 110);
 
     Marker(int hueMin, int hueMax, int hueWrapAroundMin, int hueWrapAroundMax) {
         this.hueMin = hueMin;

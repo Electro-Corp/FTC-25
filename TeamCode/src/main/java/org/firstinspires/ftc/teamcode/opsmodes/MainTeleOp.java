@@ -75,7 +75,7 @@ public class MainTeleOp extends LinearOpMode {
 
         cam = new OpenCVManager(hardwareMap);
 
-        autoPipeLine = new AutoPipeLine(Marker.RED, new Point(TARGET_X, TARGET_Y));
+        autoPipeLine = new AutoPipeLine(Marker.YELLOW, new Point(TARGET_X, TARGET_Y));
         cam.setPipeline(autoPipeLine);
 
         arm = new Arm(hardwareMap);

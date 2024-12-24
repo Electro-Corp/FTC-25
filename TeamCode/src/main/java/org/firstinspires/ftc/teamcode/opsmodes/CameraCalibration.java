@@ -18,7 +18,8 @@ public class CameraCalibration extends LinearOpMode {
         INPUT_DISTANCE_X,
         INPUT_DISTANCE_Y,
         CALCULATION,
-        AM_I_RIGHT
+        AM_I_RIGHT,
+        LETS_TRY_AGAIN
     }
 
     CalibStage calibStage = CalibStage.NOTHING;
@@ -26,7 +27,7 @@ public class CameraCalibration extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         OpenCVManager manager = new OpenCVManager(hardwareMap);
-        AutoPipeLine autoPipeLine = new AutoPipeLine(Marker.RED, new Point(320, 240));
+        AutoPipeLine autoPipeLine = new AutoPipeLine(Marker.BLUE, new Point(320, 240));
         manager.setPipeline(autoPipeLine);
 
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
@@ -36,7 +37,7 @@ public class CameraCalibration extends LinearOpMode {
 
         double time = getRuntime();
 
-        int measuredX = 0, measuredY = 0;
+        double measuredX = 0, measuredY = 0;
 
         double finalConstX = 0.0, finalConstY = 0.0;
 
@@ -45,7 +46,7 @@ public class CameraCalibration extends LinearOpMode {
         while (opModeIsActive()){
             telemetry.addData("POSX", autoPipeLine.getX());
             telemetry.addData("POSY", autoPipeLine.getY());
-            telemetry.addLine("======== CAMERA DISTANCE CALIBRATION ========");
+            telemetry.addLine("== CAMERA DISTANCE CALIBRATION ==");
             switch(calibStage){
                 case NOTHING:
                     telemetry.addLine("Press A on GamePad 1 to begin calibration.");
@@ -66,14 +67,14 @@ public class CameraCalibration extends LinearOpMode {
 
                     if(!upKeyPressed && gamepad1.dpad_up){
                         upKeyPressed = true;
-                        measuredX++;
+                        measuredX+=0.25;
                     }else if(!gamepad1.dpad_up){
                         upKeyPressed = false;
                     }
 
                     if(!downKeyPressed && gamepad1.dpad_down){
                         downKeyPressed = true;
-                        measuredX--;
+                        measuredX-=0.25;
                     }else if(!gamepad1.dpad_down){
                         downKeyPressed = false;
                     }
@@ -93,14 +94,14 @@ public class CameraCalibration extends LinearOpMode {
 
                     if(!upKeyPressed && gamepad1.dpad_up){
                         upKeyPressed = true;
-                        measuredY++;
+                        measuredY+=0.25;
                     }else if(!gamepad1.dpad_up){
                         upKeyPressed = false;
                     }
 
                     if(!downKeyPressed && gamepad1.dpad_down){
                         downKeyPressed = true;
-                        measuredY--;
+                        measuredY-=0.25;
                     }else if(!gamepad1.dpad_down){
                         downKeyPressed = false;
                     }
@@ -124,10 +125,20 @@ public class CameraCalibration extends LinearOpMode {
                     break;
                 case AM_I_RIGHT:
                     telemetry.addLine("Testing...");
+                    telemetry.addData("Calculated X constant", finalConstX);
+                    telemetry.addData("Calculated Y constant", finalConstY);
                     roadRunnerHelper.resetPath();
                     roadRunnerHelper.splineToLinearHeading(autoPipeLine.getX() / finalConstX, autoPipeLine.getY() / finalConstY, 0);
                     if(!sampleMecanumDrive.isBusy()){
-                        calibStage = CalibStage.NOTHING;
+                        calibStage = CalibStage.LETS_TRY_AGAIN;
+                    }
+                    break;
+                case LETS_TRY_AGAIN:
+                    telemetry.addLine("Move the piece to a new location and press A to test again.");
+                    telemetry.addData("Calculated X constant", finalConstX);
+                    telemetry.addData("Calculated Y constant", finalConstY);
+                    if(isAValid()){
+                        calibStage = CalibStage.AM_I_RIGHT;
                     }
                     break;
             }
