@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.jbbfi.JBBFI;
 import org.firstinspires.ftc.teamcode.jbbfi.ScriptingWebPortal;
+import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIClassNotFoundException;
+import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIInvalidFunctionException;
+import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIUnknownKeywordException;
 import org.firstinspires.ftc.teamcode.pipelines.AutoPipeLine;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
@@ -15,6 +18,7 @@ import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
 import org.opencv.core.Point;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 public abstract class AutoBase extends LinearOpMode {
@@ -41,6 +45,10 @@ public abstract class AutoBase extends LinearOpMode {
 
 
     int neg = -1;
+
+
+    int tolerance = 27;
+    double moveDistance = 5.0;
 
 
 
@@ -81,7 +89,7 @@ public abstract class AutoBase extends LinearOpMode {
 
             cam = new OpenCVManager(hardwareMap);
 
-            autoPipeLine = new AutoPipeLine(Marker.YELLOW, new Point(250, 250));
+            autoPipeLine = new AutoPipeLine(Marker.BLUE, new Point(250, 250));
             cam.setPipeline(autoPipeLine);
             claw.closeTheClaw();
 
@@ -110,6 +118,9 @@ public abstract class AutoBase extends LinearOpMode {
         String objectsList = String.format("%s", Arrays.toString(loadedObjects));
 
         while(!isStarted() && !isStopRequested()) {
+            telemetry.addData("POSX", autoPipeLine.getX());
+            telemetry.addData("POSY", autoPipeLine.getY());
+            telemetry.addData("Distance to middle of screen", (autoPipeLine.getX() + autoPipeLine.getWidth() / 2) - (OpenCVManager.WIDTH / 2));
             if(scriptingWebPortal.isAlive()){
                 telemetry.addLine("ScriptPortal is alive " + scriptingWebPortal.getState().toString());
             }else{
@@ -162,6 +173,34 @@ public abstract class AutoBase extends LinearOpMode {
         double distX = lockON.x - x;
         double distY = y - lockON.y;
         roadRunnerHelper.splineToLinearHeading(distX, distY, 0);
+    }
+
+    public void alignWithPiece(String callBack, RoadRunnerHelper rHelper) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        int distance = (autoPipeLine.getX() + autoPipeLine.getWidth() / 2) - (OpenCVManager.WIDTH / 2);
+        while(Math.abs(distance) > tolerance) {
+            distance = (autoPipeLine.getX() + autoPipeLine.getWidth() / 2) - (OpenCVManager.WIDTH / 2);
+            telemetry.addData("Distance", distance);
+
+            if (Math.abs(distance) < tolerance) {
+                telemetry.addLine("Distance is within tolerance.");
+
+            } else {
+                double scaleFactor = Math.max(0.2, Math.min(1.0, Math.abs((double) distance / (OpenCVManager.WIDTH / 2))));
+                double adjustedMoveDistance = moveDistance * scaleFactor;
+
+                if (distance > 0) {
+                    // Target is to the right
+                    telemetry.addLine("We're moving right.");
+                    rHelper.strafeRight(adjustedMoveDistance);
+                } else {
+                    // Target is to the left
+                    telemetry.addLine("We're moving left.");
+                    rHelper.strafeRight(-adjustedMoveDistance);
+                }
+            }
+            telemetry.update();
+        }
+        jbbfi.runFunction(callBack);
     }
 
     public abstract void moveToBucketInit();

@@ -4,7 +4,7 @@ public enum Marker {
     YELLOW(20, 35, -1, 30),
     RED_OLD(165, 180, -1, 180),
     RED(0, 30, 160, 180),
-    BLUE(100, 130, -1, 110);
+    BLUE(100, 130, -1, -1);
 
     Marker(int hueMin, int hueMax, int hueWrapAroundMin, int hueWrapAroundMax) {
         this.hueMin = hueMin;

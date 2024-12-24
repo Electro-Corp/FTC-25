@@ -228,7 +228,7 @@ public class JBBFI {
                                 obj.executeFunction(functionName, args.toArray(new JBBFIArg[0]));
                             } catch (Exception e){
                                 e.printStackTrace();
-                                throw new JBBFIInvalidFunctionException(obj.getName() + "::" + functionName);
+                                throw new JBBFIInvalidFunctionException(obj.getName() + "::" + functionName + " with error (" + e.getCause() + ")");
                             }
                         }
 

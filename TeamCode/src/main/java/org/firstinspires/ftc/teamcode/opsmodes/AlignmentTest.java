@@ -63,21 +63,26 @@ public class AlignmentTest extends LinearOpMode {
             // Decisions decisions
 
             // Check distance
-            int distance = autoPipeLine.getX() - (OpenCVManager.WIDTH / 2);
-            telemetry.addData("Distance", distance);
-            if(Math.abs(distance) < tolerance){
-                telemetry.addLine("Distance is within tolerance.");
-            }else{
-                if(autoPipeLine.getX() > (OpenCVManager.WIDTH / 2)){
-                    // is it to the right of the screen
-                    // we gotta go right
-                    telemetry.addLine("We're moving right.");
-                    roadRunnerHelper.strafeRight(moveDistance);
-                }else{
-                    // then its gotta be on the left
-                    // we gotta go left
-                    telemetry.addLine("We're moving left.");
-                    roadRunnerHelper.strafeRight(moveDistance * -1);
+            telemetry.addLine("Hold B to move");
+            if (gamepad1.b) {
+                int distance = autoPipeLine.getX() - (OpenCVManager.WIDTH / 2);
+                telemetry.addData("Distance", distance);
+
+                if (Math.abs(distance) < tolerance) {
+                    telemetry.addLine("Distance is within tolerance.");
+                } else {
+                    double scaleFactor = Math.max(0.2, Math.min(1.0, Math.abs((double) distance / (OpenCVManager.WIDTH / 2))));
+                    double adjustedMoveDistance = moveDistance * scaleFactor;
+
+                    if (distance > 0) {
+                        // Target is to the right
+                        telemetry.addLine("We're moving right.");
+                        roadRunnerHelper.strafeRight(adjustedMoveDistance);
+                    } else {
+                        // Target is to the left
+                        telemetry.addLine("We're moving left.");
+                        roadRunnerHelper.strafeRight(-adjustedMoveDistance);
+                    }
                 }
             }
 

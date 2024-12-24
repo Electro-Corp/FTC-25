@@ -258,6 +258,10 @@ public class AutoPipeLine extends OpenCvPipeline {
     }
     public int getY(){return y;}
 
+    public int getWidth(){
+        return width;
+    }
+
     public void setPrevLocText(String prevLocText) {
         this.prevLocText = prevLocText;
     }
