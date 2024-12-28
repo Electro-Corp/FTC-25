@@ -175,9 +175,11 @@ public abstract class AutoBase extends LinearOpMode {
         roadRunnerHelper.splineToLinearHeading(distX, distY, 0);
     }
 
-    public void alignWithPiece(String callBack, RoadRunnerHelper rHelper) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public void alignWithPiece(String callBack, RoadRunnerHelper rHelper, double tolerance, double timeout) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        double curTime = getRuntime();
         int distance = (autoPipeLine.getX() + autoPipeLine.getWidth() / 2) - (OpenCVManager.WIDTH / 2);
         while(Math.abs(distance) > tolerance) {
+            if(getRuntime() - curTime > timeout) break;
             distance = (autoPipeLine.getX() + autoPipeLine.getWidth() / 2) - (OpenCVManager.WIDTH / 2);
             telemetry.addData("Distance", distance);
 

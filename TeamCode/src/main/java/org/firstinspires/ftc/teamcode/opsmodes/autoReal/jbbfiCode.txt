@@ -8,6 +8,10 @@ driveHelper::strafeRight(31)
 goto clipThing
 function_end
 
+function why
+me::alignWithPiece(resetMe,driveHelper)
+function_end
+
 function resetMe
 arm::pitchSet(0.421)
 arm::setArmPos(0)
@@ -46,19 +50,19 @@ goto wow
 function_end
 
 function wow
+//arm::pitchSet(0.360)
 driveHelper::turnOp(90)
 driveHelper::strafeRight(26)
 driveHelper::forward(50)
 //driveHelper::splineToLinearHeading(15, 0, 0)
-arm::pitchSet(0.360)
-me::alignWithPiece()
+me::alignWithPiece(afterAlign,driveHelper, 45, 3)
 function_end
 
 function afterAlign
 arm::pitchSet(0.2584)
-driveHelper::forwardJBBFI(15, 5.0)
-me::pause(1000)
-driveHelper::reverse(2)
+driveHelper::forwardJBBFI(20, 7.0)
+driveHelper::resetPath()
+driveHelper::reverse(4)
 me::pause(500)
 arm::pitchSet(0.2884)
 me::pause(500)
@@ -67,21 +71,22 @@ me::pause(500)
 arm::pitchSet(0.176999)
 arm::setArmPos(800)
 driveHelper::reverse(61)
-driveHelper::strafeLeft(24)
+driveHelper::strafeLeft(15)
 driveHelper::turn(90)
-goto yellow
+goto placeSecondClip
 function_end
 
-function yellow
+function placeSecondClip
 claw::wristLeft()
-driveHelper::forward(4)
-me::pause(500)
+driveHelper::forward(11.9)
 arm::pitchSet(0.2)
+me::pause(700)
+arm::pitchSet(0.17)
 arm::setArmPos(0)
 me::pause(800)
 claw::openClaw()
 driveHelper::reverse(4)
-goto pushToTape
+//goto pushToTape
 function_end
 
 function pushToTape
@@ -199,3 +204,8 @@ function_end
 function clo
 me::close()
 function_end
+
+
+
+
+
