@@ -14,11 +14,12 @@ public class ServoCalib extends LinearOpMode {
     //Robot robot;
 
     // Float
-    float wristPos = 0.45f, clawPos = 0.0f, doorPos = 0.0f;
+    float wristPos = 0.45f, clawPos = 0.0f, leftPitchPos = 0.421f, rightPitchPos = 0.5f;
     int servoNumber = 2;
     Servo clawServo;
     Servo wristServo;
-    Servo pitchSero;
+    Servo pitchServoLeft;
+    Servo pitchServoRight;
 
     boolean changeDown = false;
 
@@ -26,13 +27,18 @@ public class ServoCalib extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        pitchSero = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_PITCHSERVO);
-        clawServo  = this.hardwareMap.get(Servo.class, Claw.SERVO_CLAW);
+        pitchServoLeft = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_LEFTPITCHSERVO);
+        pitchServoRight = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_RIGHTPITCHSERVO);
+        clawServo = this.hardwareMap.get(Servo.class, Claw.SERVO_CLAW);
         //bucketServo = this.hardwareMap.get(Servo.class, Bucket.HARDWARE_NAME);
         wristServo = this.hardwareMap.get(Servo.class, Claw.SERVO_WRIST);
 
-        waitForStart();
+        pitchServoRight.setPosition(rightPitchPos);
+        pitchServoLeft.setPosition(leftPitchPos);
+        clawServo.setPosition(clawPos);
+        wristServo.setPosition(wristPos);
 
+        waitForStart();
 
         //robot = new Robot(Auto_RED_FAR_SIDE.StartPos.BACKSTAGE, hardwareMap);
         while (opModeIsActive()) {
@@ -41,7 +47,7 @@ public class ServoCalib extends LinearOpMode {
             if (gamepad1.dpad_right) {
                 if (changeDown == false) {
                     servoNumber++;
-                    if (servoNumber > 2)
+                    if (servoNumber > 3)
                         servoNumber = 0;
                 }
                 changeDown = true;
@@ -55,13 +61,17 @@ public class ServoCalib extends LinearOpMode {
             if(bucketPos > 1.0f)bucketPos = 1.0f;
 
              */
-            if(doorPos < 0.0f)doorPos = 0.0f;
-            if(doorPos > 1.0f)doorPos = 1.0f;
+            if(leftPitchPos < 0.0f) leftPitchPos = 0.0f;
+            if(leftPitchPos > 1.0f) leftPitchPos = 1.0f;
+
+            if(rightPitchPos < 0.0f) rightPitchPos = 0.0f;
+            if(rightPitchPos > 1.0f) rightPitchPos = 1.0f;
 
 
             telemetry.addData("WRIST", "%f", wristPos);
             telemetry.addData("CLAW", "%f", clawPos);
-            telemetry.addData("DOOR", "%f", doorPos);
+            telemetry.addData("LEFT PITCH", "%f", leftPitchPos);
+            telemetry.addData("RIGHT PITCH", "%f", rightPitchPos);
             telemetry.addLine("=======================");
             switch (servoNumber) {
                 case 0: //WRIST
@@ -77,12 +87,17 @@ public class ServoCalib extends LinearOpMode {
                     telemetry.addLine("CURRENT IS CLAW");
                     break;
                 case 2:
-                    if (gamepad1.dpad_up) doorPos += diff;
-                    if (gamepad1.dpad_down) doorPos -= diff;
-                    pitchSero.setPosition(doorPos);
-                    telemetry.addLine("CURRENT IS ARM");
+                    if (gamepad1.dpad_up) leftPitchPos += diff;
+                    if (gamepad1.dpad_down) leftPitchPos -= diff;
+                    pitchServoLeft.setPosition(leftPitchPos);
+                    telemetry.addLine("CURRENT IS LEFT PITCH");
                     break;
-
+                case 3:
+                    if (gamepad1.dpad_up) rightPitchPos += diff;
+                    if (gamepad1.dpad_down) rightPitchPos -= diff;
+                    pitchServoRight.setPosition(rightPitchPos);
+                    telemetry.addLine("CURRENT IS RIGHT PITCH");
+                    break;
             }
             telemetry.update();
         }

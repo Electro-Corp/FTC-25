@@ -1,19 +1,19 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
     public static final String HARDWARE_NAME_SLIDE = "ArmSlide";
-    public static final String HARDWARE_NAME_PITCHSERVO = "PitchServo";
+    public static final String HARDWARE_NAME_LEFTPITCHSERVO = "LeftPitchServo";
+    public static final String HARDWARE_NAME_RIGHTPITCHSERVO = "RightPitchServo";
     // Claw def goes here later
 
     private final DcMotorEx armExtender;
-    private final Servo upDown;
+    private final Servo pitchLeft;
+    private final Servo pitchRight;
 
     public int MAX_HORIZONTAL_EXTENSION = 2400 ; // just some guess
     public double ARM_HORIZONTAL_MAX = 0.224499; // literal bs i have no idea what it is, fill in with the number at which we dont consider it horizontal
@@ -23,28 +23,28 @@ public class Arm {
 
     private int armPos;
 
-    private final double PitchStop = 0.07;
-    private final double pitchWallGrab = 0.308;
-    private final double PitchSeek = 0.375;
-    private final double PitchGrabSeek = 0.38;//0.23;
+    private final double LeftPitchStop = 0.07;
+    private final double LeftPitchWallGrab = 0.308;
+    private final double LeftPitchSeek = 0.375;
+    private final double LeftPitchGrabSeek = 0.38;//0.23;
 
-    private final double PitchInit = 0.421;
-    private final double Grab = 0.5;
+    private final double LeftPitchInit = 0.421;
+    private final double LeftPitchGrab = 0.5;
 
     // Auto Pos for Clipon
-    private final double pitchClipPos = 0.225;
+    private final double LeftPitchClipPos = 0.225;
     private final int slidePosClipOn = 1988;
 
     // Auto pos for Bucket
 
-    private final double pitchBucketPos = 0.087;
+    private final double LeftPitchBucketPos = 0.087;
     //private final int slidePosBucket;
 
     public static final int SLIDE_MIN = 0;
     public static final int SLIDE_MAX = 2600;
     public static final int slideWallGrab = 2200;
 
-    private double pitchPos = 0.0f;
+    private double leftPitchPos = 0.0f;
 
     public enum ArmState{
         TOP,
@@ -61,65 +61,65 @@ public class Arm {
         armExtender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armPos = armExtender.getCurrentPosition();
 
-        this.upDown = hardwareMap.get(Servo.class, HARDWARE_NAME_PITCHSERVO);
+        this.pitchLeft = hardwareMap.get(Servo.class, HARDWARE_NAME_LEFTPITCHSERVO);
+        this.pitchRight = hardwareMap.get(Servo.class, HARDWARE_NAME_RIGHTPITCHSERVO);
 
         setArmPos(SLIDE_MIN);
         armPos = SLIDE_MIN;
 
-        pitchSet(PitchInit);
-
+        pitchSet(LeftPitchInit);
     }
 
     public void pitchAppend(double pos) {
-        pitchPos += pos;
-        pitchSet(pitchPos);
+        leftPitchPos += pos;
+        pitchSet(leftPitchPos);
     }
 
     // Bascially only for JBBFI
     public void pitchAppendNeg(double pos) {
-        pitchPos -= pos;
-        pitchSet(pitchPos);
+        leftPitchPos -= pos;
+        pitchSet(leftPitchPos);
     }
 
     public void pitchSet(double pos){
-        if(pos > PitchStop){
+        if(pos > LeftPitchStop){
             if(pos < ARM_HORIZONTAL_MAX){
                 if(armPos > MAX_HORIZONTAL_EXTENSION)
                     setArmPos(MAX_HORIZONTAL_EXTENSION);
             }
-            upDown.setPosition(pos);
+            pitchLeft.setPosition(pos);
         }
     }
 
     public void pitchGoToPitchSeek(){
         armState = ArmState.MID;
-        pitchPos = PitchGrabSeek;
-        pitchSet(PitchGrabSeek);
+        leftPitchPos = LeftPitchGrabSeek;
+        pitchSet(LeftPitchGrabSeek);
     }
 
     public void pitchGrabSeek(){
         armState = ArmState.BOT;
-        pitchPos = PitchSeek;
-        pitchSet(PitchSeek);
+        leftPitchPos = LeftPitchSeek;
+        pitchSet(LeftPitchSeek);
     }
 
     public void pitchGoToGrab(){
         armState = ArmState.TOP;
-        pitchPos = Grab;
-        pitchSet(Grab);
+        leftPitchPos = LeftPitchGrab;
+        pitchSet(LeftPitchGrab);
     }
 
     public void wallGrab() {
-        pitchPos = pitchWallGrab;
-        pitchSet(pitchPos);
+        leftPitchPos = LeftPitchWallGrab;
+        pitchSet(leftPitchPos);
 
         armPos = slideWallGrab;
         setArmPos(armPos);
     }
 
     public void clipOn(){
-        pitchPos = pitchClipPos;
-        pitchSet(pitchPos);
+        leftPitchPos = LeftPitchClipPos;
+        pitchSet(leftPitchPos);
 
 
         armPos = slidePosClipOn;
@@ -127,8 +127,8 @@ public class Arm {
     }
 
     public void clipOn(double speed){
-        pitchPos = pitchClipPos;
-        pitchSet(pitchPos);
+        leftPitchPos = LeftPitchClipPos;
+        pitchSet(leftPitchPos);
 
 
         armPos = slidePosClipOn;
@@ -136,13 +136,13 @@ public class Arm {
     }
 
     public void moveToGround() {
-        upDown.setPosition(POSITION_GROUND);
+        pitchLeft.setPosition(POSITION_GROUND);
     }
 
     public void moveToBucket() {
         //upDown.setPosition(POSITION_BUCKET);
-        pitchPos = pitchBucketPos;
-        pitchSet(pitchPos);
+        leftPitchPos = LeftPitchBucketPos;
+        pitchSet(leftPitchPos);
 
 
         setArmPos(SLIDE_MAX, 0.3);
@@ -159,7 +159,7 @@ public class Arm {
     public void setArmPosFast(int x){setArmPos(x, 1.0);}
 
     public void setArmPos(int x, double speed) {
-        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && armPos < x){
+        if(x > MAX_HORIZONTAL_EXTENSION && leftPitchPos > ARM_HORIZONTAL_MAX && armPos < x){
             return;
         }
 
@@ -178,7 +178,7 @@ public class Arm {
     }
 
     public void armAppendDist(int dist){
-        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && (armPos + dist) > armPos){
+        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && leftPitchPos > ARM_HORIZONTAL_MAX && (armPos + dist) > armPos){
             return;
         }
         armPos += dist;
