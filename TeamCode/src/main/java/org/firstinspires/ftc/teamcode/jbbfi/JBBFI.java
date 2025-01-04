@@ -62,7 +62,12 @@ public class JBBFI {
         try {
             readFile(fileName);
         } catch (FileNotFoundException e){
-            throw new JBBFIScriptNotFoundException(fileName);
+            try{
+              File swag = new File(fileName);
+              readFile(fileName);
+            }catch(Exception g) {
+                throw new JBBFIScriptNotFoundException(fileName);
+            }
         }
 
         // Add math as a global

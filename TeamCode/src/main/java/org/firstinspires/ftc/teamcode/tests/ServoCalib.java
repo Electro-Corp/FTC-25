@@ -36,7 +36,7 @@ public class ServoCalib extends LinearOpMode {
         pitchServoRight.setPosition(rightPitchPos);
         pitchServoLeft.setPosition(leftPitchPos);
         clawServo.setPosition(clawPos);
-        wristServo.setPosition(wristPos);
+            wristServo.setPosition(wristPos);
 
         waitForStart();
 

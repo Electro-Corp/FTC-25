@@ -1,0 +1,16 @@
+function init
+hanger::setStage1MotorPos(500)
+function_end
+
+function stage1
+hanger::setStage1MotorPos(0)
+function_end
+
+
+function stage2
+// start
+arm::setArmPos(1300)
+
+// at the end
+arm::setArmPos(0)
+function_end
