@@ -23,7 +23,7 @@ import org.opencv.core.Point;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 @TeleOp(name="Hanger JBBFI")
-public class HangerJBBFIProto extends LinearOpMode {
+public abstract class HangerJBBFIProto extends LinearOpMode {
 
     private Arm arm;
     private Claw claw;
@@ -152,4 +152,5 @@ public class HangerJBBFIProto extends LinearOpMode {
     }
 
 
+    public abstract void moveToBucketInit();
 }

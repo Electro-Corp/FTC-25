@@ -15,9 +15,8 @@ public class Arm {
     private final Servo pitchLeft;
     private final Servo pitchRight;
 
-    public int MAX_HORIZONTAL_EXTENSION = 2400 ; // just some guess
-    public double ARM_HORIZONTAL_MAX = 0.224499; // literal bs i have no idea what it is, fill in with the number at which we dont consider it horizontal
-
+    public int MAX_HORIZONTAL_EXTENSION = 5360 ;
+    public double ARM_HORIZONTAL_MAX = 0.224499;
     private static final float POSITION_GROUND = 0;
     private static final float POSITION_BUCKET = 1;
 
@@ -41,7 +40,7 @@ public class Arm {
     //private final int slidePosBucket;
 
     public static final int SLIDE_MIN = 0;
-    public static final int SLIDE_MAX = 2600;
+    public static final int SLIDE_MAX = 8100;
     public static final int slideWallGrab = 2200;
 
     private double leftPitchPos = 0.0f;

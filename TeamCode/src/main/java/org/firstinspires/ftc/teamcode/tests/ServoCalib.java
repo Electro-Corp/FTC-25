@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 //import org.firstinspires.ftc.teamcode.objects.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 //import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 @TeleOp(name="Servo Calib")
@@ -14,12 +15,13 @@ public class ServoCalib extends LinearOpMode {
     //Robot robot;
 
     // Float
-    float wristPos = 0.45f, clawPos = 0.0f, leftPitchPos = 0.421f, rightPitchPos = 0.5f;
+    float wristPos = 0.45f, clawPos = 0.0f, leftPitchPos = 0.421f, rightPitchPos = 0.5f, littleArmPos = 0.5f;
     int servoNumber = 2;
     Servo clawServo;
     Servo wristServo;
     Servo pitchServoLeft;
     Servo pitchServoRight;
+    Servo littleArmThing;
 
     boolean changeDown = false;
 
@@ -32,11 +34,13 @@ public class ServoCalib extends LinearOpMode {
         clawServo = this.hardwareMap.get(Servo.class, Claw.SERVO_CLAW);
         //bucketServo = this.hardwareMap.get(Servo.class, Bucket.HARDWARE_NAME);
         wristServo = this.hardwareMap.get(Servo.class, Claw.SERVO_WRIST);
+        littleArmThing = this.hardwareMap.get(Servo.class, Hanger.HARDWARE_NAME_LITTLEARMHANG);
 
         pitchServoRight.setPosition(rightPitchPos);
         pitchServoLeft.setPosition(leftPitchPos);
         clawServo.setPosition(clawPos);
-            wristServo.setPosition(wristPos);
+        wristServo.setPosition(wristPos);
+        littleArmThing.setPosition(littleArmPos);
 
         waitForStart();
 
@@ -47,7 +51,7 @@ public class ServoCalib extends LinearOpMode {
             if (gamepad1.dpad_right) {
                 if (changeDown == false) {
                     servoNumber++;
-                    if (servoNumber > 3)
+                    if (servoNumber > 4)
                         servoNumber = 0;
                 }
                 changeDown = true;
@@ -67,11 +71,15 @@ public class ServoCalib extends LinearOpMode {
             if(rightPitchPos < 0.0f) rightPitchPos = 0.0f;
             if(rightPitchPos > 1.0f) rightPitchPos = 1.0f;
 
+            if(littleArmPos < 0.0f) littleArmPos = 0.0f;
+            if(littleArmPos > 1.0f) littleArmPos = 1.0f;
+
 
             telemetry.addData("WRIST", "%f", wristPos);
             telemetry.addData("CLAW", "%f", clawPos);
             telemetry.addData("LEFT PITCH", "%f", leftPitchPos);
             telemetry.addData("RIGHT PITCH", "%f", rightPitchPos);
+            telemetry.addData("LITTLE ARM", "%f", littleArmPos);
             telemetry.addLine("=======================");
             switch (servoNumber) {
                 case 0: //WRIST
@@ -97,6 +105,12 @@ public class ServoCalib extends LinearOpMode {
                     if (gamepad1.dpad_down) rightPitchPos -= diff;
                     pitchServoRight.setPosition(rightPitchPos);
                     telemetry.addLine("CURRENT IS RIGHT PITCH");
+                    break;
+                case 4:
+                    if (gamepad1.dpad_up) littleArmPos += diff;
+                    if (gamepad1.dpad_down) littleArmPos -= diff;
+                    littleArmThing.setPosition(littleArmPos);
+                    telemetry.addLine("CURRENT IS LITTLE ARM");
                     break;
             }
             telemetry.update();

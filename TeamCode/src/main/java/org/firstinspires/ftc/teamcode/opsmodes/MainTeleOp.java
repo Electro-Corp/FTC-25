@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.pipelines.AutoPipeLine;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Hanger;
 import org.firstinspires.ftc.teamcode.subsystems.Marker;
 import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
@@ -27,9 +28,11 @@ public class MainTeleOp extends LinearOpMode {
 
     private Arm arm;
     private Claw claw;
+    private Hanger hanger;
 
     private boolean armChangerHeld = false;
     private boolean clawChangerHeld = false;
+    private boolean littleArmDeployed = false;
 
     RoadRunnerHelper roadRunnerHelper;
     SampleMecanumDrive mecanumDrive;
@@ -81,6 +84,8 @@ public class MainTeleOp extends LinearOpMode {
         arm = new Arm(hardwareMap);
 
         claw = new Claw(hardwareMap);
+
+        hanger = new Hanger(hardwareMap);
     }
 
     @Override
@@ -91,6 +96,7 @@ public class MainTeleOp extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()){
+            updateHanger();
             updateArm();
             updateClaw();
             updateDriveMotors();
@@ -99,6 +105,7 @@ public class MainTeleOp extends LinearOpMode {
             telemetry.addData("POSY", autoPipeLine.getY());
 
             if(!assistDriver) {
+                updateHanger();
                 updateArm();
                 updateClaw();
                 updateDriveMotors();
@@ -146,6 +153,29 @@ public class MainTeleOp extends LinearOpMode {
             assistButtonPressed = false;
             assistDriver = false;
             currentAssistStage = AutoState.SEEK;
+        }
+    }
+
+    boolean x1Pressed = false;
+
+    private void updateHanger() {
+        if (gamepad1.left_trigger > 0.1) hanger.appendHangerDist((int) -(gamepad1.left_trigger * 2.5f));
+        if (gamepad1.right_trigger > 0.1) hanger.appendHangerDist((int) (gamepad1.right_trigger * 2.5f));
+
+        if (!littleArmDeployed && gamepad1.x && !x1Pressed) {
+            hanger.deployLittleArm();
+            littleArmDeployed = true;
+            x1Pressed = true;
+        }
+
+        if (littleArmDeployed && gamepad1.x && !x1Pressed) {
+            hanger.retractLittleArm();
+            littleArmDeployed = false;
+            x1Pressed = true;
+        }
+
+        if (x1Pressed && !gamepad1.x) {
+            x1Pressed = false;
         }
     }
 
