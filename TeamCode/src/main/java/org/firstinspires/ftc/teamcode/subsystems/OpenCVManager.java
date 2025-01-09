@@ -34,9 +34,10 @@ public class OpenCVManager implements OpenCvCamera.AsyncCameraOpenListener {
         camera.setPipeline(pipeline);
     }
 
+
     @Override
     public void onOpened() {
-        camera.startStreaming(WIDTH, HEIGHT, OpenCvCameraRotation.UPRIGHT);
+        camera.startStreaming(WIDTH, HEIGHT, OpenCvCameraRotation.UPSIDE_DOWN);
     }
 
     @Override

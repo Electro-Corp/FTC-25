@@ -1,3 +1,26 @@
+function hanginit
+hanger::setHangerPos(3470)
+hanger::retractLittleArm()
+function_end
+
+function stage1Hang
+hanger::setHangerPos(1900)
+
+me::pause(3000)
+goto hanginit
+function_end
+
+function stage2Hang
+arm::setArmPos(2100)
+arm::pitchSet(0.09)
+me::pause(1000)
+arm::setArmPos(1000)
+function_end
+
+function upGo
+arm::setArmPos(2100)
+function_end
+
 function moveToClipPositionClose
 driveHelper::resetPath()
 //driveHelper::splineToLinearHeadingJBBFI(31,24,0,1,0)
@@ -38,7 +61,7 @@ function_end
 
 function clipThing
 claw::wristLeft()
-driveHelper::forward(13.9)
+driveHelper::forward(13.4)
 arm::pitchSet(0.2)
 me::pause(700)
 arm::pitchSet(0.17)
@@ -55,14 +78,14 @@ driveHelper::turnOp(90)
 driveHelper::strafeRight(26)
 driveHelper::forward(50)
 //driveHelper::splineToLinearHeading(15, 0, 0)
-me::alignWithPiece(afterAlign,driveHelper, 45, 3)
+me::alignWithPiece(afterAlign,driveHelper, 1000, 1)
 function_end
 
 function afterAlign
 arm::pitchSet(0.2584)
 driveHelper::forwardJBBFI(20, 7.0)
 driveHelper::resetPath()
-driveHelper::reverse(4)
+driveHelper::reverse(3)
 me::pause(500)
 arm::pitchSet(0.2884)
 me::pause(500)
@@ -70,7 +93,9 @@ claw::openClaw()
 me::pause(500)
 arm::pitchSet(0.176999)
 arm::setArmPos(800)
+me::pause(500)
 driveHelper::reverse(61)
+driveHelper::strafeRight(10)
 driveHelper::strafeLeft(15)
 driveHelper::turn(90)
 goto placeSecondClip
@@ -78,7 +103,7 @@ function_end
 
 function placeSecondClip
 claw::wristLeft()
-driveHelper::forward(11.9)
+driveHelper::forward(13.2)
 arm::pitchSet(0.2)
 me::pause(700)
 arm::pitchSet(0.17)
@@ -204,8 +229,3 @@ function_end
 function clo
 me::close()
 function_end
-
-
-
-
-

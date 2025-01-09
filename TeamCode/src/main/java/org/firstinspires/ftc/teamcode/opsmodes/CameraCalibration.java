@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.opsmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.pipelines.AutoPipeLine;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Marker;
 import org.firstinspires.ftc.teamcode.subsystems.OpenCVManager;
 import org.firstinspires.ftc.teamcode.subsystems.RoadRunnerHelper;
@@ -24,6 +27,8 @@ public class CameraCalibration extends LinearOpMode {
 
     CalibStage calibStage = CalibStage.NOTHING;
 
+    Servo pitchServoLeft;
+
     @Override
     public void runOpMode() throws InterruptedException {
         OpenCVManager manager = new OpenCVManager(hardwareMap);
@@ -33,6 +38,8 @@ public class CameraCalibration extends LinearOpMode {
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
         RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
 
+        pitchServoLeft = this.hardwareMap.get(Servo.class, Arm.HARDWARE_NAME_LEFTPITCHSERVO);
+
         waitForStart();
 
         double time = getRuntime();
@@ -41,12 +48,27 @@ public class CameraCalibration extends LinearOpMode {
 
         double finalConstX = 0.0, finalConstY = 0.0;
 
+        float leftPitchPos = 0.421f;
+        float diff = 0.0005f;
+
+
+
         boolean upKeyPressed = false, downKeyPressed = false;
 
         while (opModeIsActive()){
             telemetry.addData("POSX", autoPipeLine.getX());
             telemetry.addData("POSY", autoPipeLine.getY());
+            telemetry.addData("ARM POS", leftPitchPos);
             telemetry.addLine("== CAMERA DISTANCE CALIBRATION ==");
+
+            if(leftPitchPos < 0.0f) leftPitchPos = 0.0f;
+            if(leftPitchPos > 1.0f) leftPitchPos = 1.0f;
+
+            if (gamepad1.right_bumper) leftPitchPos += diff;
+            if (gamepad1.left_bumper) leftPitchPos -= diff;
+
+            pitchServoLeft.setPosition(leftPitchPos);
+
             switch(calibStage){
                 case NOTHING:
                     telemetry.addLine("Press A on GamePad 1 to begin calibration.");

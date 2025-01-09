@@ -64,7 +64,7 @@ public class JBBFI {
         } catch (FileNotFoundException e){
             try{
               File swag = new File(fileName);
-              readFile(fileName);
+              //readFile(fileName);
             }catch(Exception g) {
                 throw new JBBFIScriptNotFoundException(fileName);
             }

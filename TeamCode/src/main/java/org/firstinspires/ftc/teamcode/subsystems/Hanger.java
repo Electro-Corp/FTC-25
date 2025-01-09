@@ -28,7 +28,7 @@ public class Hanger {
         retractLittleArm();
     }
 
-    private void setLittleArmPos(double pos){
+    public void setLittleArmPos(double pos){
         if(pos < 0.0f) pos = 0.0f;
         if(pos > 1.0f) pos = 1.0f;
         littleArmThing.setPosition(pos);

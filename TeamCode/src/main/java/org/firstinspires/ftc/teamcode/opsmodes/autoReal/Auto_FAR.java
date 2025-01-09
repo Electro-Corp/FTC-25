@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.opsmodes.HangerJBBFIProto;
 
 @Autonomous(group="drive", name="AUTO_RIGHT")
-public class Auto_FAR extends HangerJBBFIProto {
+public class Auto_FAR extends AutoBase {
     @Override
     public void moveToBucketInit() {
         runFunc("moveToClipPositionRight");

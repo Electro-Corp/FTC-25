@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opsmodes;
 
 import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -22,8 +23,8 @@ import org.opencv.core.Point;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
-@TeleOp(name="Hanger JBBFI")
-public abstract class HangerJBBFIProto extends LinearOpMode {
+@Autonomous(group="drive", name="HANGER JBBFI")
+public class HangerJBBFIProto extends LinearOpMode {
 
     private Arm arm;
     private Claw claw;
@@ -56,53 +57,52 @@ public abstract class HangerJBBFIProto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        if(!alreadyLaunched) {
-            Thread.UncaughtExceptionHandler caught = new Thread.UncaughtExceptionHandler() {
-                @Override
-                public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
-                    error = e.toString();
+        Thread.UncaughtExceptionHandler caught = new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(@NonNull Thread t, @NonNull Throwable e) {
+                error = e.toString();
 
-                }
-
-            };
-            error = "NONE";
-
-            scriptingWebPortal = new ScriptingWebPortal(hardwareMap.appContext);
-            scriptingWebPortal.setUncaughtExceptionHandler(caught);
-            scriptingWebPortal.start();
-
-
-            // Create drivehelper
-            SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
-            RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
-
-            Arm arm = new Arm(hardwareMap);
-            Claw claw = new Claw(hardwareMap);
-            hanger = new Hanger(hardwareMap);
-
-
-            claw.closeTheClaw();
-
-
-
-            try {
-                jbbfi = new JBBFI("/sdcard/scripting/hanger.jbbfi", hardwareMap);
-                jbbfi.addGlobal(roadRunnerHelper, "driveHelper");
-                jbbfi.addGlobal(arm, "arm");
-                jbbfi.addGlobal(claw, "claw");
-                jbbfi.addGlobal(hanger, "hanger");
-                jbbfi.addGlobal(this, "me");
-                jbbfi.addGlobal(neg, "neg");
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
             }
 
-            scriptingWebPortal.setJbbfi(jbbfi);
+        };
+        error = "NONE";
 
-            alreadyLaunched = true;
+        scriptingWebPortal = new ScriptingWebPortal(hardwareMap.appContext);
+        scriptingWebPortal.setUncaughtExceptionHandler(caught);
+        scriptingWebPortal.start();
 
+
+        // Create drivehelper
+        SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
+        RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
+
+        Arm arm = new Arm(hardwareMap);
+        Claw claw = new Claw(hardwareMap);
+        hanger = new Hanger(hardwareMap);
+
+
+        claw.closeTheClaw();
+
+
+
+        try {
+            jbbfi = new JBBFI("/sdcard/scripting/hanger.jbbfi", hardwareMap);
+            jbbfi.addGlobal(roadRunnerHelper, "driveHelper");
+            jbbfi.addGlobal(arm, "arm");
+            jbbfi.addGlobal(claw, "claw");
+            jbbfi.addGlobal(hanger, "hanger");
+            jbbfi.addGlobal(this, "me");
+            jbbfi.addGlobal(neg, "neg");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
+        scriptingWebPortal.setJbbfi(jbbfi);
+
+        alreadyLaunched = true;
+
+
 
         // Get modules
         String[] loadedObjects = jbbfi.getObjectNames();
@@ -129,7 +129,7 @@ public abstract class HangerJBBFIProto extends LinearOpMode {
         }
 
         try {
-//            runFunc("dropInBucket");
+            runFunc("init");
 //            runFunc("goToTape");
 //            runFunc("pickUpPiece");
         } catch (Exception e){
@@ -152,5 +152,4 @@ public abstract class HangerJBBFIProto extends LinearOpMode {
     }
 
 
-    public abstract void moveToBucketInit();
 }

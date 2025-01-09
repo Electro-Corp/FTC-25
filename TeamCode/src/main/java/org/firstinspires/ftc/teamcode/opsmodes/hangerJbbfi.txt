@@ -1,16 +1,22 @@
-function init
-hanger::setStage1MotorPos(500)
+function hanginit
+hanger::setHangerPos(3470)
+hanger::retractLittleArm()
 function_end
 
-function stage1
-hanger::setStage1MotorPos(0)
+function stage1Hang
+hanger::setHangerPos(1900)
+
+me::pause(3000)
+goto hanginit
 function_end
 
+function stage2Hang
+arm::setArmPos(2100)
+arm::pitchSet(0.09)
+me::pause(1000)
+arm::setArmPos(1000)
+function_end
 
-function stage2
-// start
-arm::setArmPos(1300)
-
-// at the end
-arm::setArmPos(0)
+function upGo
+arm::setArmPos(2100)
 function_end
