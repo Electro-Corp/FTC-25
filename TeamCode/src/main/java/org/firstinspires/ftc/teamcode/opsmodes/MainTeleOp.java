@@ -215,18 +215,12 @@ public class MainTeleOp extends LinearOpMode {
             aPressed = true;
             if(!fish) {
                 fish = true;
+                arm.setArmPos(arm.SLIDE_MAX / 2);
                 arm.pitchGrabSeek();
             }else{
                 fish = false;
-                arm.pitchGoToPitchSeek();
-            }
-
-            if(!extendSlide) {
-                arm.setArmPos(arm.SLIDE_MAX / 2);
-                extendSlide = true;
-            } else {
                 arm.setArmPos(0);
-                extendSlide = false;
+                arm.pitchGoToPitchSeek();
             }
         }else if(!gamepad2.a){
             aPressed = false;
