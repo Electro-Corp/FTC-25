@@ -52,8 +52,6 @@ public class ScriptingWebPortal extends Thread {
     }
 
     @Override
-
-
     public void run() {
         boolean good = false;
         try {
@@ -103,8 +101,10 @@ public class ScriptingWebPortal extends Thread {
                 }
             } else if (requestLine.startsWith("POST /upload")) {
                 handleFileUpload(reader, clientSocket);
-            } else if (requestLine.startsWith("POST /run")){
+            } else if (requestLine.startsWith("POST /run")) {
                 runFunction(reader);
+            } else if(requestLine.startsWith("POST /stop")){
+                jbbfi.stop();
             } else if (requestLine.startsWith("/sdcard")){
                 String filePath = "/sdcard/scripting/test.jbbfi";
                 File file = new File(filePath);
