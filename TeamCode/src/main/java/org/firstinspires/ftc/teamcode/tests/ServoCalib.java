@@ -15,7 +15,7 @@ public class ServoCalib extends LinearOpMode {
     //Robot robot;
 
     // Float
-    float wristPos = 0.45f, clawPos = 0.0f, leftPitchPos = 0.421f, rightPitchPos = 0.5f, littleArmPos = 0.5f;
+    float wristPos = 0.45f, clawPos = 0.0f, leftPitchPos = 0.5f, rightPitchPos = 0.5f, littleArmPos = 0.5f;
     int servoNumber = 2;
     Servo clawServo;
     Servo wristServo;
@@ -51,7 +51,7 @@ public class ServoCalib extends LinearOpMode {
             if (gamepad1.dpad_right) {
                 if (changeDown == false) {
                     servoNumber++;
-                    if (servoNumber > 4)
+                    if (servoNumber > 3)
                         servoNumber = 0;
                 }
                 changeDown = true;
@@ -77,8 +77,7 @@ public class ServoCalib extends LinearOpMode {
 
             telemetry.addData("WRIST", "%f", wristPos);
             telemetry.addData("CLAW", "%f", clawPos);
-            telemetry.addData("LEFT PITCH", "%f", leftPitchPos);
-            telemetry.addData("RIGHT PITCH", "%f", rightPitchPos);
+            telemetry.addData("PITCH", "%f", leftPitchPos);
             telemetry.addData("LITTLE ARM", "%f", littleArmPos);
             telemetry.addLine("=======================");
             switch (servoNumber) {
@@ -95,18 +94,19 @@ public class ServoCalib extends LinearOpMode {
                     telemetry.addLine("CURRENT IS CLAW");
                     break;
                 case 2:
-                    if (gamepad1.dpad_up) leftPitchPos += diff;
-                    if (gamepad1.dpad_down) leftPitchPos -= diff;
+                    if (gamepad1.dpad_up) {
+                        leftPitchPos += diff;
+                        rightPitchPos += diff;
+                    }
+                    if (gamepad1.dpad_down) {
+                        leftPitchPos -= diff;
+                        rightPitchPos -= diff;
+                    }
                     pitchServoLeft.setPosition(leftPitchPos);
-                    telemetry.addLine("CURRENT IS LEFT PITCH");
+                    pitchServoRight.setPosition(rightPitchPos);
+                    telemetry.addLine("CURRENT IS PITCH");
                     break;
                 case 3:
-                    if (gamepad1.dpad_up) rightPitchPos += diff;
-                    if (gamepad1.dpad_down) rightPitchPos -= diff;
-                    pitchServoRight.setPosition(rightPitchPos);
-                    telemetry.addLine("CURRENT IS RIGHT PITCH");
-                    break;
-                case 4:
                     if (gamepad1.dpad_up) littleArmPos += diff;
                     if (gamepad1.dpad_down) littleArmPos -= diff;
                     littleArmThing.setPosition(littleArmPos);
