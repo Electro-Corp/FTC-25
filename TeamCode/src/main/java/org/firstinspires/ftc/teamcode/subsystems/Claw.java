@@ -15,13 +15,11 @@ public class Claw {
     public static final String SERVO_WRIST = "WristServo";
     public static final String SERVO_CLAW = "ClawServo ";
 
-    private static final float POSITION_CLAW_OPENED = 0.62f;
-    private static final float POSITION_CLAW_CLOSED = 1.0f; //0.98f;
-    private static final float POSITION_WRIST_CENTERED = .5f;
+    private static final float POSITION_CLAW_OPENED = 0.2725f;
+    private static final float POSITION_CLAW_CLOSED = 0.661f; //0.98f;
 
-    private static final float POSITION_WRIST_LEFT = 0.84f;
-    private static final float POSITION_WRIST_CENTER = 0.5f;
-    private static final float POSITION_WRIST_RIGHT = 0.17f;
+    private static final float POSITION_WRIST_CENTER = 0.156f;
+    private static final float POSITION_WRIST_RIGHT = 0.5f;
 
     private float currentTargetPos = 0.0f;
 
@@ -65,11 +63,6 @@ public class Claw {
     public void appendWristPos(float dist){
         currentWristPos += dist;
         setWristPos(currentWristPos);
-    }
-
-    public void wristLeft(){
-        setWristPos(POSITION_WRIST_LEFT);
-        wristParallel = false;
     }
 
     public void wristRight(){
