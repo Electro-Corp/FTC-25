@@ -25,7 +25,7 @@ public class Arm {
     private final double pitchStop = 0.423;
     private final double pitchWallGrab = 0.661;
     private final double pitchSeek = 0.375;
-    private final double pitchGrabSeek = 0.701;//0.23;
+    private final double pitchGrabSeek = 0.72;//0.23;
 
     private final double pitchInit = 0.7845;
     private final double pitchGrab = 0.5;
@@ -42,7 +42,7 @@ public class Arm {
     public static final int SLIDE_MIN = 0;
     public static final int SLIDE_MAX = 7900;
     public static final int slideWallGrab = 5326;
-    public static final int slideBucketPos = 6116;
+    public static final int slideBucketPos = 6657;
 
     private double pitchPos = 0.0f;
 
@@ -100,8 +100,8 @@ public class Arm {
 
     public void pitchGrabSeek(){
         armState = ArmState.BOT;
-        pitchPos = pitchSeek;
-        pitchSet(pitchSeek);
+        pitchPos = pitchGrabSeek;
+        pitchSet(pitchGrabSeek);
     }
 
     public void pitchGoToGrab(){
@@ -124,7 +124,7 @@ public class Arm {
 
 
         armPos = slidePosClipOn;
-        setArmPos(slidePosClipOn, 0.3);
+        setArmPos(slidePosClipOn, 0.7);
     }
 
     public void clipOn(double speed){
@@ -146,7 +146,7 @@ public class Arm {
         pitchSet(pitchPos);
 
 
-        setArmPos(slideBucketPos, 0.3);
+        setArmPos(slideBucketPos, 0.7);
     }
 
     public ArmState getArmState(){

@@ -14,8 +14,8 @@ public class Hanger {
     public static final int stage1MotorMax = 3477;
     public static final int stage1MotorMin = 0;
     public static final int stage1MotorEngaged = 2455;
-    public static final double littleArmRetracted = 0.852;
-    public static final double littleArmDeployed = 0.2825;
+    public static final double littleArmRetracted = 0.6825;
+    public static final double littleArmDeployed = 0.3735;
 
     public Hanger(HardwareMap hMap){
         stage1Motor = hMap.get(DcMotorEx.class, HARDWARE_NAME_STAGE1HANG);

@@ -186,11 +186,12 @@ public class MainTeleOp extends LinearOpMode {
     boolean bucketYesNo = false;
 
     private void updateArm(){
-        arm.armAppendDist((int) -(gamepad2.right_stick_y * 2.5f));
+        arm.armAppendDist((int) -(gamepad2.right_stick_y * 5.5f));
 
         if(gamepad2.right_bumper && !lf) {
             lf = true;
             arm.clipOn();
+            claw.wristRight();
         } else if(!gamepad2.right_bumper) {
             lf = false;
         }
@@ -220,13 +221,13 @@ public class MainTeleOp extends LinearOpMode {
             }else{
                 fish = false;
                 arm.setArmPos(0);
-                arm.pitchGoToPitchSeek();
+                //arm.pitchGoToPitchSeek();
             }
         }else if(!gamepad2.a){
             aPressed = false;
         }
 
-        arm.pitchAppend(gamepad2.left_stick_y / 7000);
+        arm.pitchAppend(gamepad2.left_stick_y / 5000);
 
         /*if(gamepad2.a){
             arm.pitchAppend(0.01f);
