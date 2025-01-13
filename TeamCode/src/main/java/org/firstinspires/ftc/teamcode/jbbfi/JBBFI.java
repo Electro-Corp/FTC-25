@@ -32,9 +32,13 @@ public class JBBFI {
     public String funcRunCur = "No function run";
 
     int currentLine = 0;
+    volatile boolean allowParseNextLine = true;
+
+    JBBFIExecLayer jbbfiExecLayer;
 
 
     public JBBFI(String fileName) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        this.jbbfiExecLayer = new JBBFIExecLayer();
         try {
             readFile(fileName);
         } catch (FileNotFoundException e){
@@ -59,6 +63,7 @@ public class JBBFI {
      */
     public JBBFI(String fileName, HardwareMap hardwareMap) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         this.hardwareMap = hardwareMap;
+        this.jbbfiExecLayer = new JBBFIExecLayer();
         try {
             readFile(fileName);
         } catch (FileNotFoundException e){
@@ -114,7 +119,14 @@ public class JBBFI {
         }
     }
 
-    private void parseLine(String line) throws JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    /**
+     * By default, just execute
+     */
+    private void parseLine(String line) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        parseLine(line, false);
+    }
+
+    private void parseLine(String line, boolean dryRun) throws JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         parseLineCur = line;
         String[] tokens = line.split("\\s+"); // we're looking for spaces
 
@@ -226,7 +238,6 @@ public class JBBFI {
                                 args.add(
                                         getArgFromString(argStr)
                                 );
-
                             }
 
                             try {
@@ -333,12 +344,26 @@ public class JBBFI {
                 functions) {
             if(funcName.split("\\(")[0].contains(func.getFunctionName())) {
                 for(String s : func.getCommands()){
-                    parseLine(s);
+                    if(allowParseNextLine) {
+                        parseLine(s);
+                    }else{
+                        // Reset parse condition and finish
+                        allowParseNextLine = true;
+                        return 0;
+                    }
                 }
                 return 1;
             }
         }
         return 0;
+    }
+
+
+    /**
+       Attempt to stop execution
+     */
+    public void stop(){
+        allowParseNextLine = false;
     }
 
 }

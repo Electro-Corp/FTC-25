@@ -10,15 +10,10 @@ me::pause(3000)
 goto hanginit
 function_end
 
-function stage2Hang
-arm::setArmPos(2100)
-arm::pitchSet(0.09)
-me::pause(1000)
-arm::setArmPos(1000)
-function_end
-
 function upGo
-arm::setArmPos(2100)
+claw::wristRight()
+arm::setArmPosFast(0)
+//arm::setArmPos(2100)
 function_end
 
 function moveToClipPositionClose
@@ -44,12 +39,19 @@ function_end
 
 function moveToClipPositionRight
 driveHelper::resetPath()
-arm::pitchSet(0.176999)
-arm::setArmPos(800)
-//driveHelper::splineToLinearHeading(22, 18, 0)
-driveHelper::splineToLinearHeading(13,12,0)
+//arm::pitchSet(0.176999)
+//arm::setArmPos(800)
+
+//driveHelper::splineToLinearHeading(13,12,0)
 //driveHelper::forward(12)
 //driveHelper::strafeLeft(12)
+driveHelper::forward(12)
+driveHelper::strafeLeft(8)
+//arm::clipOn()
+claw::wristRight()
+arm::pitchSet(0.5735)
+arm::setArmPosFast(5219)
+me::pause(3000)
 goto clipThing
 function_end
 
@@ -60,15 +62,16 @@ claw::openClaw()
 function_end
 
 function clipThing
-claw::wristLeft()
-driveHelper::forward(13.4)
-arm::pitchSet(0.2)
+driveHelper::forward(3.4)
+//arm::pitchSet(0.2)
+arm::pitchSet(0.5935)
 me::pause(700)
-arm::pitchSet(0.17)
+//arm::pitchSet(0.17)
+arm::pitchAppendNeg(0.03)
 arm::setArmPos(0)
-me::pause(800)
+me::pause(1200)
 claw::openClaw()
-driveHelper::reverse(4)
+driveHelper::reverse(3.4)
 goto wow
 function_end
 
@@ -76,9 +79,12 @@ function wow
 //arm::pitchSet(0.360)
 driveHelper::turnOp(90)
 driveHelper::strafeRight(26)
-driveHelper::forward(50)
+driveHelper::forward(42.5)
+arm::wallGrab()
+me::pause(3000)
 //driveHelper::splineToLinearHeading(15, 0, 0)
-me::alignWithPiece(afterAlign,driveHelper, 1000, 1)
+//me::alignWithPiece(afterAlign,driveHelper, 1000, 1)
+//goto afterAlign
 function_end
 
 function afterAlign
@@ -102,7 +108,7 @@ goto placeSecondClip
 function_end
 
 function placeSecondClip
-claw::wristLeft()
+claw::wristRight()
 driveHelper::forward(13.2)
 arm::pitchSet(0.2)
 me::pause(700)

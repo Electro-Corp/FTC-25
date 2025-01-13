@@ -42,7 +42,11 @@ public class MainTeleOp extends LinearOpMode {
     private static final double TARGET_X = 320;
     private static final double TARGET_Y = 240;
 
-    private static final double ITS_OK_TOLERANCE = 0.0005;
+    // TODO: REPLACE THESE NUMBERS WITH ACTUAL CALIBRATED NUMBERS
+    private static final double finalConstX = 88;
+    private static final double finalConstY = 82;
+
+    private static final double ITS_OK_TOLERANCE = 5;
 
     boolean assistDriver = false;
 
@@ -129,11 +133,7 @@ public class MainTeleOp extends LinearOpMode {
                             currentAssistStage = AutoState.ALIGN_Y;
                         }else {
                             roadRunnerHelper.resetPath();
-                            int xConst = 88 * (lockON.x > TARGET_X ? 1 : -1);
-                            int yConst = 64 * (lockON.y > TARGET_Y ? -1 : 1);
-                            double distX = lockON.x - TARGET_X;
-                            double distY = TARGET_Y - lockON.y;
-                            roadRunnerHelper.splineToLinearHeading(lockON.x / xConst, lockON.y / yConst, 0);
+                            roadRunnerHelper.splineToLinearHeading(autoPipeLine.getX() / finalConstX, autoPipeLine.getY() / finalConstY, 0);
                         }
                 }
             }
