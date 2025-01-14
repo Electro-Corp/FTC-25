@@ -23,7 +23,7 @@ public class Arm {
     private int armPos;
 
     private final double pitchStop = 0.423;
-    private final double pitchWallGrab = 0.661;
+    private final double pitchWallGrab = 0.655;
     private final double pitchSeek = 0.375;
     private final double pitchGrabSeek = 0.72;//0.23;
 
@@ -83,10 +83,10 @@ public class Arm {
 
     public void pitchSet(double pos){
         if(pos > pitchStop){
-            if(pos < ARM_HORIZONTAL_MAX){
-                if(armPos > MAX_HORIZONTAL_EXTENSION)
-                    setArmPos(MAX_HORIZONTAL_EXTENSION);
-            }
+//            if(pos < ARM_HORIZONTAL_MAX){
+//                if(armPos > MAX_HORIZONTAL_EXTENSION)
+//                    setArmPos(MAX_HORIZONTAL_EXTENSION);
+//            }
             pitchLeft.setPosition(pos);
             pitchRight.setPosition(pos);
         }
@@ -160,9 +160,9 @@ public class Arm {
     public void setArmPosFast(int x){setArmPos(x, 1.0);}
 
     public void setArmPos(int x, double speed) {
-        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && armPos < x){
-            return;
-        }
+//        if(x > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && armPos < x){
+//            return;
+//        }
 
         armPos = x;
         armExtender.setTargetPosition(x);
@@ -179,9 +179,9 @@ public class Arm {
     }
 
     public void armAppendDist(int dist){
-        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && (armPos + dist) > armPos){
-            return;
-        }
+//        if(armPos + dist > MAX_HORIZONTAL_EXTENSION && pitchPos > ARM_HORIZONTAL_MAX && (armPos + dist) > armPos){
+//            return;
+//        }
         armPos += dist;
         if(armPos > SLIDE_MAX){
             armPos = SLIDE_MAX;
