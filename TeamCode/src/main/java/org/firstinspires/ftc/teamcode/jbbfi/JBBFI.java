@@ -306,7 +306,7 @@ public class JBBFI {
                 if(module.getName().equals(moduleName)){
                     ArrayList<JBBFIArg> args = new ArrayList<>();
                     // Get the arguments in the "( )"
-                    String argsSTR = moduleArgs.substring(moduleArgs.indexOf("<")+1, moduleArgs.length());
+                    String argsSTR = moduleArgs.substring(moduleArgs.indexOf("<")+1);
                     // Isolate args
                     String[] argList = argsSTR.split("\\;");
                     for(String arg : argList){
