@@ -92,6 +92,11 @@ public class Arm {
         }
     }
 
+    public void pitchSetNoStop(double pos){
+        pitchLeft.setPosition(pos);
+        pitchRight.setPosition(pos);
+    }
+
     public void pitchGoToPitchSeek(){
         armState = ArmState.MID;
         pitchPos = pitchGrabSeek;
