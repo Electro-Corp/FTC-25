@@ -16,6 +16,7 @@ public class HangerTesting extends LinearOpMode {
 
     private boolean littleArmDeployed = false;
     private int hangerDiff = 50;
+    private boolean armChangerHeld = false;
 
     private boolean xPressed = false;
     private boolean isLittleArmDeployed = false;
@@ -53,6 +54,13 @@ public class HangerTesting extends LinearOpMode {
                 xPressed = true;
             } else if (!gamepad1.x && xPressed) {
                 xPressed = false;
+            }
+
+            if(gamepad2.left_bumper && !armChangerHeld){
+                armChangerHeld = true;
+                arm.moveToBucket();
+            } else if(!gamepad2.left_bumper) {
+                armChangerHeld = false;
             }
         }
 
