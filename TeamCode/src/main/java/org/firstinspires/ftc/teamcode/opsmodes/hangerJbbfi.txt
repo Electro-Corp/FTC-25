@@ -1,22 +1,307 @@
 function hanginit
+arm::setArmPos(0)
 hanger::setHangerPos(3470)
+//hanger::setLittleArmPos(0.35)
 hanger::retractLittleArm()
+me::pause(3000)
+arm::pitchSetNoStop(0.7545)
 function_end
 
 function stage1Hang
-hanger::setHangerPos(1900)
+//hanger::deployLittleArm()
+hanger::setLittleArmPos(0.3035)
+arm::pitchSet(0.470)
+arm::setArmPosFast(7000)
+me::pause(1300)
+hanger::setHangerPos(1800)
+me::pause(1500)
+goto stage2Hang
+function_end
 
-me::pause(3000)
-goto hanginit
+function way
+hanger::setLittleArmPos(0.10)
 function_end
 
 function stage2Hang
-arm::setArmPos(2100)
-arm::pitchSet(0.09)
+arm::pitchSetNoStop(0.390)
 me::pause(1000)
-arm::setArmPos(1000)
+hanger::retractLittleArm()
+arm::setArmPos(0)
+me::pause(3000)
+goto stage3Final
+function_end
+
+function stage3Final
+
+hanger::setHangerPos(0)
+arm::pitchSetNoStop(0.780)
+function_end
+
+function clawTest
+arm::pitchSet(0.356)
+me::pause(3000)
+arm::setArmPosFast(0)
+me::pause(3000)
 function_end
 
 function upGo
-arm::setArmPos(2100)
+claw::wristRight()
+arm::setArmPosFast(0)
+//arm::setArmPos(2100)
 function_end
+
+function moveToClipPositionClose
+driveHelper::resetPath()
+//driveHelper::splineToLinearHeadingJBBFI(31,24,0,1,0)
+arm::pitchSet(0.176999)
+arm::setArmPos(800)
+driveHelper::forward(22)
+driveHelper::strafeRight(31)
+goto clipThing
+function_end
+
+function why
+arm::wallGrab()
+//me::alignWithPiece(resetMe,driveHelper)
+function_end
+
+function resetMe
+arm::pitchSet(0.421)
+arm::setArmPos(0)
+claw::openClaw()
+claw::wristCenter()
+function_end
+
+function moveToClipPositionRight
+driveHelper::resetPath()
+arm::pitchSet(0.5735)
+arm::setArmPosFast(5219)
+driveHelper::forward(12)
+//arm::clipOn()
+claw::wristRight()
+me::pause(1000)
+goto clipThing
+function_end
+
+function goBack
+driveHelper::reverse(3.4)
+arm::setArmPos(0)
+arm::pitchSet(0.784)
+driveHelper::strafeRight(8)
+driveHelper::reverse(12)
+function_end
+
+function swag
+claw::openClaw()
+me::pause(2000)
+claw::openClaw()
+function_end
+
+function clipThing
+driveHelper::forward(3.4)
+//arm::pitchSet(0.2)
+arm::pitchSet(0.5935)
+me::pause(700)
+//arm::pitchSet(0.17)
+arm::pitchAppendNeg(0.03)
+arm::setArmPos(0)
+me::pause(1200)
+claw::openClaw()
+driveHelper::reverse(3.4)
+goto wow
+function_end
+
+function wow
+//arm::pitchSet(0.360)
+driveHelper::turnOp(90)
+driveHelper::strafeRight(18)
+driveHelper::forward(54.5)
+driveHelper::forwardJBBFI(20, 10)
+driveHelper::reverse(5.5)
+//arm::wallGrab()
+arm::pitchSet(0.63)
+me::pause(800)
+claw::openClaw()
+me::pause(1000)
+driveHelper::forward(6)
+driveHelper::strafeLeft(13)
+arm::pitchSet(0.5)
+driveHelper::reverse(70)
+claw::wristRight()
+arm::pitchSet(0.5735)
+arm::setArmPosFast(5219)
+driveHelper::turn(90)
+me::pause(1000)
+goto clipThatAgain
+function_end
+
+function clipThatAgain
+driveHelper::forward(5.4)
+arm::pitchSet(0.5935)
+me::pause(700)
+arm::pitchAppendNeg(0.03)
+me::pause(5000)
+
+function_end
+
+function actualClip
+//arm::setArmPos(0)
+//me::pause(1200)
+//claw::openClaw()
+//driveHelper::reverse(5.4)
+function_end
+
+function afterAlign
+arm::pitchSet(0.2584)
+driveHelper::forwardJBBFI(20, 7.0)
+driveHelper::resetPath()
+driveHelper::reverse(3)
+me::pause(500)
+arm::pitchSet(0.2884)
+me::pause(500)
+claw::openClaw()
+me::pause(500)
+arm::pitchSet(0.176999)
+arm::setArmPos(800)
+me::pause(500)
+driveHelper::reverse(50)
+driveHelper::strafeRight(10)
+driveHelper::strafeLeft(15)
+driveHelper::turn(90)
+goto placeSecondClip
+function_end
+
+function placeSecondClip
+claw::wristRight()
+driveHelper::forward(13.2)
+arm::pitchSet(0.2)
+me::pause(700)
+arm::pitchSet(0.17)
+arm::setArmPos(0)
+me::pause(800)
+claw::openClaw()
+driveHelper::reverse(4)
+//goto pushToTape
+function_end
+
+function pushToTape
+driveHelper::reverse(14)
+driveHelper::turnOp(90)
+driveHelper::forward(40)
+driveHelper::strafeLeft(48)
+driveHelper::forward(6)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(50)
+driveHelper::forward(6)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(50)
+driveHelper::forward(7)
+driveHelper::strafeRight(50)
+driveHelper::strafeLeft(10)
+driveHelper::reverse(5)
+function_end
+
+
+
+function resetThing
+arm::pitchGrabSeek()
+driveHelper::reset()
+arm::setArmPos(0)
+function_end
+
+function moveToBuckIniCLOSE
+//driveHelper::forward(14)
+//driveHelper::strafeLeft(17)
+driveHelper::splineToLinearHeading(17,14,125)
+goto dropInBucket
+function_end
+
+function moveToBuckIniFAR
+//driveHelper::forward(14)
+//driveHelper::strafeLeft(60)
+driveHelper::splineToLinearHeading(60,14,125)
+goto dropInBucket
+function_end
+
+function goToTape
+driveHelper::strafeRight(108)
+function_end
+
+function pickUpPiece
+
+function_end
+
+function dropInBucket
+//driveHelper::turn(125)
+arm::moveToBucket()
+me::pause(2500)
+arm::armAppendDist(80)
+me::pause(800)
+driveHelper::forward(20)
+me::pause(500)
+arm::pitchAppend(0.05)
+me::pause(200)
+claw::wristRight()
+claw::openClaw()
+me::pause(100)
+arm::moveToBucket()
+me::pause(600)
+claw::openClaw()
+driveHelper::reverse(17)
+driveHelper::turn(225)
+arm::setArmPosFast(1350)
+arm::pitchGrabSeek()
+me::pause(1000)
+goto pickUpFromTape
+function_end
+
+function pickUpFromTape
+driveHelper::turn(15)
+claw::wristRight()
+claw::openClaw()
+me::pause(600)
+arm::pitchSet(0.400)
+me::pause(600)
+claw::openClaw()
+me::pause(600)
+arm::pitchGrabSeek()
+arm::setArmPosFast(0)
+me::pause(100)
+driveHelper::strafeLeft(2)
+driveHelper::reverse(2)
+goto bucketTwo
+function_end
+
+function bucketTwo
+driveHelper::turn(115)
+arm::moveToBucket()
+me::pause(2500)
+arm::armAppendDist(30)
+me::pause(800)
+driveHelper::forward(20)
+me::pause(300)
+arm::pitchAppend(0.05)
+me::pause(200)
+claw::wristRight()
+claw::openClaw()
+me::pause(100)
+arm::moveToBucket()
+driveHelper::reverse(5)
+claw::wristCenter()
+claw::openClaw()
+me::pause(100)
+arm::setArmPosFast(0)
+driveHelper::reverse(15)
+arm::pitchGrabSeek()
+me::pause(2000)
+function_end
+
+function clo
+me::close()
+function_end
+
+
+
+
+
+

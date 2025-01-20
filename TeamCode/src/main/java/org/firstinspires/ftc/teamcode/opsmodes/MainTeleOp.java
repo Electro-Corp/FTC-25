@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.opsmodes;
-import static org.firstinspires.ftc.teamcode.subsystems.Arm.SLIDE_MIN;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -158,8 +157,59 @@ public class MainTeleOp extends LinearOpMode {
 
     boolean x1Pressed = false;
 
+    private void initHang(){
+        arm.setArmPos(0);
+        hanger.setHangerPos(3470);
+        hanger.retractLittleArm();
+        arm.pitchSetNoStop(0.7545);
+    }
+
+    private void stage1(){
+        hanger.setLittleArmPos(0.3035);
+        arm.pitchSet(0.470);
+        arm.setArmPosFast(7000);
+        pause(1300);
+        hanger.setHangerPos(1800);
+        pause(1500);
+    }
+
+    private void stage2(){
+        arm.pitchSetNoStop(0.390);
+        pause(1000);
+        arm.setArmPos(0);
+        //hanger.setHangerPos(1750);
+        pause(800);
+        arm.pitchSetNoStop(0.780);
+        //hanger.retractLittleArm();
+        hanger.setLittleArmPos(0.1);
+        pause(2200);
+        stage3();
+    }
+
+    private void stage3(){
+        hanger.setHangerPos(0);
+        arm.pitchSetNoStop(0.780);
+        initialized = false;
+    }
+
+    boolean initialized = false, stage1 = false, stage2 = false;
     private void updateHanger() {
-        if (gamepad1.left_trigger > 0.1) hanger.appendHangerDist((int) -(gamepad1.left_trigger * 2.5f));
+        if(gamepad1.x && !x1Pressed){
+            x1Pressed = true;
+            if(!initialized) {
+                initialized = true;
+                initHang();
+            } else if(!stage1){
+                stage1 = true;
+                stage1();
+            } else if(!stage2){
+                stage2 = false;
+                stage2();
+            }
+        }else if(!gamepad1.x){
+            x1Pressed = false;
+        }
+        /*if (gamepad1.left_trigger > 0.1) hanger.appendHangerDist((int) -(gamepad1.left_trigger * 2.5f));
         if (gamepad1.right_trigger > 0.1) hanger.appendHangerDist((int) (gamepad1.right_trigger * 2.5f));
 
         if (!littleArmDeployed && gamepad1.x && !x1Pressed) {
@@ -176,7 +226,12 @@ public class MainTeleOp extends LinearOpMode {
 
         if (x1Pressed && !gamepad1.x) {
             x1Pressed = false;
-        }
+        }*/
+
+    }
+
+    public void pause(double milli){
+        sleep((long) milli);
     }
 
     boolean extend = false, lf = false;
