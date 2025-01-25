@@ -47,6 +47,8 @@ public class MainTeleOp extends LinearOpMode {
 
     private static final double ITS_OK_TOLERANCE = 5;
 
+    private int hangerDiff = 200;
+
     boolean assistDriver = false;
 
     private enum AutoState {
@@ -99,10 +101,6 @@ public class MainTeleOp extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()){
-            updateHanger();
-            updateArm();
-            updateClaw();
-            updateDriveMotors();
 
             telemetry.addData("POSX", autoPipeLine.getX());
             telemetry.addData("POSY", autoPipeLine.getY());
@@ -171,6 +169,7 @@ public class MainTeleOp extends LinearOpMode {
         pause(1300);
         hanger.setHangerPos(1800);
         pause(1500);
+        stage2();
     }
 
     private void stage2(){
@@ -178,7 +177,7 @@ public class MainTeleOp extends LinearOpMode {
         pause(1000);
         arm.setArmPos(0);
         //hanger.setHangerPos(1750);
-        pause(800);
+        pause(1800);
         arm.pitchSetNoStop(0.780);
         //hanger.retractLittleArm();
         hanger.setLittleArmPos(0.1);
@@ -194,18 +193,26 @@ public class MainTeleOp extends LinearOpMode {
 
     boolean initialized = false, stage1 = false, stage2 = false;
     private void updateHanger() {
+        // Manual Control
+        if (gamepad2.dpad_up) {
+            hanger.appendHangerDist(hangerDiff);
+        } else if (gamepad2.dpad_down) {
+            hanger.appendHangerDist(-1 * hangerDiff);
+        }
+
         if(gamepad1.x && !x1Pressed){
             x1Pressed = true;
             if(!initialized) {
                 initialized = true;
                 initHang();
-            } else if(!stage1){
+            } else if(!stage1) {
                 stage1 = true;
                 stage1();
-            } else if(!stage2){
-                stage2 = false;
-                stage2();
             }
+//            } else if(!stage2){
+//                stage2 = false;
+//                stage2();
+//            }
         }else if(!gamepad1.x){
             x1Pressed = false;
         }
@@ -335,13 +342,13 @@ public class MainTeleOp extends LinearOpMode {
         if (Math.abs(gamepad1.right_stick_x) > 0.1)
             yaw = gamepad1.right_stick_x;
 
-        if (gamepad1.dpad_up || gamepad2.dpad_up)
+        if (gamepad1.dpad_up)
             axial += 0.3;
-        if (gamepad1.dpad_down || gamepad2.dpad_down)
+        if (gamepad1.dpad_down)
             axial -= 0.3;
-        if (gamepad1.dpad_left || gamepad2.dpad_left)
+        if (gamepad1.dpad_left)
             lateral -= 0.3;
-        if (gamepad1.dpad_right || gamepad2.dpad_right)
+        if (gamepad1.dpad_right)
             lateral += 0.3;
 
         if (gamepad1.right_bumper)
