@@ -16,7 +16,7 @@ public class Arm {
     private final Servo pitchRight;
 
     public int MAX_HORIZONTAL_EXTENSION = 5360 ;
-    public double ARM_HORIZONTAL_MAX = 0.224499;
+    public double ARM_HORIZONTAL_MAX = 0.567;
     private static final float POSITION_GROUND = 0;
     private static final float POSITION_BUCKET = 1;
 
@@ -83,10 +83,10 @@ public class Arm {
 
     public void pitchSet(double pos){
         if(pos > pitchStop){
-//            if(pos < ARM_HORIZONTAL_MAX){
-//                if(armPos > MAX_HORIZONTAL_EXTENSION)
-//                    setArmPos(MAX_HORIZONTAL_EXTENSION);
-//            }
+            if(pos > ARM_HORIZONTAL_MAX){
+                if(armPos > MAX_HORIZONTAL_EXTENSION)
+                    setArmPos(MAX_HORIZONTAL_EXTENSION);
+            }
             pitchLeft.setPosition(pos);
             pitchRight.setPosition(pos);
         }
