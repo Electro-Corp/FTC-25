@@ -245,6 +245,7 @@ public class MainTeleOp extends LinearOpMode {
     boolean clipOnYesNo = false;
     boolean yPressed = false, aPressed = false;
     boolean extendSlide = false, fish = false;
+    boolean bucket = false;
     boolean bucketYesNo = false;
 
     private void updateArm(){
@@ -260,7 +261,13 @@ public class MainTeleOp extends LinearOpMode {
 
        if(gamepad2.left_bumper && !armChangerHeld){
             armChangerHeld = true;
-            arm.moveToBucket();
+            if (!bucket) {
+                arm.moveToBucket();
+                bucket = true;
+            } else {
+                bucket = false;
+                arm.setArmPos(0);
+            }
         } else if(!gamepad2.left_bumper) {
             armChangerHeld = false;
         }
@@ -283,6 +290,7 @@ public class MainTeleOp extends LinearOpMode {
             }else{
                 fish = false;
                 arm.setArmPos(0);
+                arm.pitchHorizontal();
                 //arm.pitchGoToPitchSeek();
             }
         }else if(!gamepad2.a){
