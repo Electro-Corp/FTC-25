@@ -51,7 +51,6 @@ public abstract class AutoBase extends LinearOpMode {
     double moveDistance = 5.0;
 
 
-
     boolean alreadyLaunched = false;
 
     public void pause(double milli){
@@ -84,8 +83,8 @@ public abstract class AutoBase extends LinearOpMode {
             SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(hardwareMap);
             RoadRunnerHelper roadRunnerHelper = new RoadRunnerHelper(sampleMecanumDrive);
 
-            Arm arm = new Arm(hardwareMap);
-            Claw claw = new Claw(hardwareMap);
+            arm = new Arm(hardwareMap);
+            claw = new Claw(hardwareMap);
 
             cam = new OpenCVManager(hardwareMap);
 
@@ -203,6 +202,11 @@ public abstract class AutoBase extends LinearOpMode {
             telemetry.update();
         }
         jbbfi.runFunction(callBack);
+    }
+
+    public void resetEverything() {
+        arm.reset();
+        claw.reset();
     }
 
     public abstract void moveToBucketInit();

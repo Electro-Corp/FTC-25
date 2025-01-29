@@ -27,7 +27,7 @@ public class Arm {
     private final double pitchSeek = 0.375;
     private final double pitchGrabSeek = 0.72;//0.23;
 
-    private final double pitchInit = 0.782; //old value 0.7545
+    private final double pitchInit = 0.7545; //old value 0.7545
     private final double pitchGrab = 0.5;
 
     // Auto Pos for Clipon
@@ -199,5 +199,13 @@ public class Arm {
     public void zeroSlidePower(){
         armExtender.setPower(0.0);
     }
+
+
+    public void reset() {
+        setArmPos(SLIDE_MIN);
+        pitchSet(pitchInit);
+        armPos = SLIDE_MIN;
+    }
+
 
 }

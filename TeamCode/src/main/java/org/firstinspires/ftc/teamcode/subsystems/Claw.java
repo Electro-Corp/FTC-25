@@ -38,6 +38,10 @@ public class Claw {
 
     }
 
+    public void reset() {
+        wristCenter();
+    }
+
     private void setClawPos(float pos){
         servoClaw.setPosition(pos);
     }
