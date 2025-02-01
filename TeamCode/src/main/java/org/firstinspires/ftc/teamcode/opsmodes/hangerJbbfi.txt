@@ -30,7 +30,7 @@ function_end
 function grabFromWall
 driveHelper::turnOp(90)
 driveHelper::strafeRight(15)
-driveHelper::forward(54.5)
+driveHelper::forward(55.5)
 arm::pitchSet(0.63)
 driveHelper::forwardJBBFI(5, 10) // (20, 10)
 driveHelper::reverse(4.5)
@@ -43,12 +43,12 @@ claw::wristRight()
 arm::pitchSet(0.5735)
 arm::setArmPosFast(5219)
 driveHelper::turn(90)
-driveHelper::reverse(2)
+driveHelper::reverseJBBFI(2, 10)
 goto clipThatAgain
 function_end
 
 function clipThatAgain
-driveHelper::forward(15.4)
+driveHelper::forwardJBBFI(15.4, 10)
 arm::pitchSet(0.5685) //0.5935
 me::pause(700)
 arm::pitchSet(0.5935)
@@ -225,7 +225,4 @@ function_end
 function clo
 me::close()
 function_end
-
-
-
 
