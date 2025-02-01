@@ -26,6 +26,7 @@ public class Arm {
     private final double pitchWallGrab = 0.655;
     private final double pitchSeek = 0.375;
     private final double pitchGrabSeek = 0.72;//0.23;
+    private final double pitchHorizontal = 0.71;
 
     private final double pitchInit = 0.7545; //old value 0.7545
     private final double pitchGrab = 0.5;
@@ -101,6 +102,11 @@ public class Arm {
         armState = ArmState.MID;
         pitchPos = pitchGrabSeek;
         pitchSet(pitchGrabSeek);
+    }
+
+    public void pitchHorizontal() {
+        pitchPos = pitchHorizontal;
+        pitchSet(pitchPos);
     }
 
     public void pitchGrabSeek(){
