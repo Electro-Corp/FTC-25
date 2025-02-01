@@ -1,85 +1,10 @@
-function hanginit
-arm::setArmPos(0)
-hanger::setHangerPos(3470)
-//hanger::setLittleArmPos(0.35)
-hanger::retractLittleArm()
-me::pause(3000)
-arm::pitchSetNoStop(0.7545)
-function_end
-
-function stage1Hang
-//hanger::deployLittleArm()
-hanger::setLittleArmPos(0.3035)
-arm::pitchSet(0.470)
-arm::setArmPosFast(7000)
-me::pause(1300)
-hanger::setHangerPos(1800)
-me::pause(1500)
-goto stage2Hang
-function_end
-
-function way
-hanger::setLittleArmPos(0.10)
-function_end
-
-function stage2Hang
-arm::pitchSetNoStop(0.390)
-me::pause(1000)
-hanger::retractLittleArm()
-arm::setArmPos(0)
-me::pause(3000)
-goto stage3Final
-function_end
-
-function stage3Final
-
-hanger::setHangerPos(0)
-arm::pitchSetNoStop(0.780)
-function_end
-
-function clawTest
-arm::pitchSet(0.356)
-me::pause(3000)
-arm::setArmPosFast(0)
-me::pause(3000)
-function_end
-
-function upGo
-claw::wristRight()
-arm::setArmPosFast(0)
-//arm::setArmPos(2100)
-function_end
-
-function moveToClipPositionClose
-driveHelper::resetPath()
-//driveHelper::splineToLinearHeadingJBBFI(31,24,0,1,0)
-arm::pitchSet(0.176999)
-arm::setArmPos(800)
-driveHelper::forward(22)
-driveHelper::strafeRight(31)
-goto clipThing
-function_end
-
-function why
-arm::wallGrab()
-//me::alignWithPiece(resetMe,driveHelper)
-function_end
-
-function resetMe
-arm::pitchSet(0.421)
-arm::setArmPos(0)
-claw::openClaw()
-claw::wristCenter()
-function_end
-
 function moveToClipPositionRight
 driveHelper::resetPath()
-arm::pitchSet(0.5735)
-arm::setArmPosFast(5219)
-driveHelper::forward(12)
-//arm::clipOn()
+arm::pitchSet(0.5645) //0.5735
+arm::setArmPosFast(5300) //5219
+driveHelper::forward(14)
 claw::wristRight()
-me::pause(1000)
+me::pause(1200)
 goto clipThing
 function_end
 
@@ -91,57 +16,57 @@ driveHelper::strafeRight(8)
 driveHelper::reverse(12)
 function_end
 
-function swag
-claw::openClaw()
-me::pause(2000)
-claw::openClaw()
-function_end
-
 function clipThing
-driveHelper::forward(3.4)
-//arm::pitchSet(0.2)
 arm::pitchSet(0.5935)
 me::pause(700)
-//arm::pitchSet(0.17)
 arm::pitchAppendNeg(0.03)
 arm::setArmPos(0)
 me::pause(1200)
 claw::openClaw()
 driveHelper::reverse(3.4)
-goto wow
+goto grabFromWall
 function_end
 
-function wow
-//arm::pitchSet(0.360)
+function grabFromWall
 driveHelper::turnOp(90)
-driveHelper::strafeRight(18)
+driveHelper::strafeRight(15)
 driveHelper::forward(54.5)
-driveHelper::forwardJBBFI(20, 10)
-driveHelper::reverse(5.5)
-//arm::wallGrab()
 arm::pitchSet(0.63)
-me::pause(800)
+driveHelper::forwardJBBFI(5, 10) // (20, 10)
+driveHelper::reverse(5.6)
 claw::openClaw()
-me::pause(1000)
-driveHelper::forward(6)
-driveHelper::strafeLeft(13)
-arm::pitchSet(0.5)
-driveHelper::reverse(70)
+me::pause(300)
+arm::pitchSet(0.45) //0.5
+driveHelper::strafeRight(8)
+driveHelper::reverse(58.6)
 claw::wristRight()
 arm::pitchSet(0.5735)
 arm::setArmPosFast(5219)
 driveHelper::turn(90)
-me::pause(1000)
+driveHelper::reverse(2)
 goto clipThatAgain
 function_end
 
 function clipThatAgain
-driveHelper::forward(5.4)
-arm::pitchSet(0.5935)
+driveHelper::forward(15.4)
+arm::pitchSet(0.5685) //0.5935
 me::pause(700)
-arm::pitchAppendNeg(0.03)
-me::pause(5000)
+arm::pitchSet(0.5935)
+me::pause(500)
+arm::setArmPos(0)
+me::pause(1200)
+claw::openClaw()
+driveHelper::reverse(3.4)
+goto pushClipIntoZone
+function_end
 
+function pushClipIntoZone
+driveHelper::strafeRight(43)
+driveHelper::forwardJBBFI(37, 50)
+driveHelper::strafeRight(7)
+driveHelper::reverse(40)
+//driveHelper::splineHacked(25, 23, 0)
+me::pause(3000)
 function_end
 
 function actualClip
@@ -225,6 +150,7 @@ function_end
 
 function goToTape
 driveHelper::strafeRight(108)
+
 function_end
 
 function pickUpPiece
@@ -299,8 +225,6 @@ function_end
 function clo
 me::close()
 function_end
-
-
 
 
 
