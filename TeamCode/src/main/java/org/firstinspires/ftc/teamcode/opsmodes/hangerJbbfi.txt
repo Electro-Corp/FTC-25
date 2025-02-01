@@ -48,7 +48,7 @@ goto clipThatAgain
 function_end
 
 function clipThatAgain
-driveHelper::forwardJBBFI(15.4, 10)
+driveHelper::forwardJBBFI(16.4, 18)
 arm::pitchSet(0.5685) //0.5935
 me::pause(700)
 arm::pitchSet(0.5935)
@@ -113,8 +113,8 @@ function pushToTape
 driveHelper::reverse(14)
 driveHelper::turnOp(90)
 driveHelper::forward(40)
-driveHelper::strafeLeft(48)
-driveHelper::forward(6)
+driveHelper::strafeLeft(50)
+driveHelper::forward(8)
 driveHelper::strafeRight(50)
 driveHelper::strafeLeft(50)
 driveHelper::forward(6)
@@ -225,4 +225,3 @@ function_end
 function clo
 me::close()
 function_end
-
