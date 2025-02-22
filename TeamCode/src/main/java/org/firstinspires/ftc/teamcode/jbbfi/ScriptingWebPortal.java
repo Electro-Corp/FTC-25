@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.jbbfi;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotserver.internal.webserver.CoreRobotWebServer;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -15,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 
 import java.net.Socket;
@@ -26,9 +23,9 @@ public class ScriptingWebPortal extends Thread {
 
     private static final int PORT = 8082;
 
-    public int PORT_FINAL = 8082;
+    public int PORT_FINAL = 8083;
 
-    private ServerSocket serverSocket;
+    public static ServerSocket SERVER_SOCKET;
     private Context context;
     private Handler handler;
 
@@ -53,22 +50,19 @@ public class ScriptingWebPortal extends Thread {
 
     @Override
     public void run() {
+
         boolean good = false;
         try {
-            while(!good) {
-                PORT_FINAL += 1;
+            if(SERVER_SOCKET == null) {
                 try {
-                    serverSocket = new ServerSocket(PORT_FINAL);
-                    good = true;
-                }catch (Exception e){
-                    if(PORT_FINAL > 9000){
-                        throw new RuntimeException(e);
-                    }
-                    good = false;
+                    SERVER_SOCKET = new ServerSocket(PORT_FINAL);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
+
             while (running) {
-                Socket clientSocket = serverSocket.accept();
+                Socket clientSocket = SERVER_SOCKET.accept();
                 handleRequest(clientSocket);
             }
         } catch (Exception e) {

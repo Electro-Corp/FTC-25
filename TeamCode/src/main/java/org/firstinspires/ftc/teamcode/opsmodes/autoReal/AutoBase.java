@@ -125,7 +125,7 @@ public abstract class AutoBase extends LinearOpMode {
             }else{
                 telemetry.addLine("ScriptPortal is dead " + scriptingWebPortal.getState().toString());
             }
-            telemetry.addData("PORT", scriptingWebPortal.PORT_FINAL);
+            telemetry.addData("PORT", scriptingWebPortal.SERVER_SOCKET);
             telemetry.addData("Error", error);
             telemetry.addLine("======= JBBFI TRACE =======");
             telemetry.addData("Last/Current line parsed", jbbfi.parseLineCur);

@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIClassNotFoundExcepti
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIInvalidFunctionException;
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIScriptNotFoundException;
 import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFIUnknownKeywordException;
+import org.firstinspires.ftc.teamcode.jbbfi.exceptions.JBBFICompareNotComparable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,7 +38,7 @@ public class JBBFI {
     JBBFIExecLayer jbbfiExecLayer;
 
 
-    public JBBFI(String fileName) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public JBBFI(String fileName) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFICompareNotComparable {
         this.jbbfiExecLayer = new JBBFIExecLayer();
         try {
             readFile(fileName);
@@ -60,16 +61,17 @@ public class JBBFI {
      * @throws FileNotFoundException
      * @throws JBBFIInvalidFunctionException
      * @throws JBBFIUnknownKeywordException
+     * @throws JBBFICompareNotComparable
      */
-    public JBBFI(String fileName, HardwareMap hardwareMap) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public JBBFI(String fileName, HardwareMap hardwareMap) throws JBBFIScriptNotFoundException, JBBFIClassNotFoundException, FileNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFICompareNotComparable {
         this.hardwareMap = hardwareMap;
         this.jbbfiExecLayer = new JBBFIExecLayer();
         try {
             readFile(fileName);
         } catch (FileNotFoundException e){
             try{
-              File swag = new File(fileName);
-              //readFile(fileName);
+                File swag = new File(fileName);
+                //readFile(fileName);
             }catch(Exception g) {
                 throw new JBBFIScriptNotFoundException(fileName);
             }
@@ -81,7 +83,7 @@ public class JBBFI {
         parse();
     }
 
-    public void parse() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException{
+    public void parse() throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, JBBFICompareNotComparable{
         for(currentLine = 0; currentLine < fileData.size(); currentLine++){
             parseLine(fileData.get(currentLine));
         }
@@ -121,12 +123,13 @@ public class JBBFI {
 
     /**
      * By default, just execute
+     * @throws JBBFICompareNotComparable
      */
-    private void parseLine(String line) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private void parseLine(String line) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFICompareNotComparable {
         parseLine(line, false);
     }
 
-    private void parseLine(String line, boolean dryRun) throws JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    private void parseLine(String line, boolean dryRun) throws JBBFIClassNotFoundException, JBBFIUnknownKeywordException, JBBFIInvalidFunctionException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFICompareNotComparable {
         parseLineCur = line;
         String[] tokens = line.split("\\s+"); // we're looking for spaces
 
@@ -162,17 +165,49 @@ public class JBBFI {
                 break;
             // If?
             case "if":
+                String var1 = tokens[1];
+                String comp = tokens[2];
+                String var2 = tokens[3];
+                String trueCallback = tokens[4];
+                String falseCallback = tokens[5];
 
+                boolean result = false;
+                // Its gon be a double trust me bro
+                double comp1 = Double.parseDouble(getArgFromString(var1, true).getArg().toString());
+                double comp2 = Double.parseDouble(getArgFromString(var2, true).getArg().toString());
+
+
+                switch(comp){
+                    case "<":
+                        result = comp1 < comp2;
+                        break;
+                    case ">":
+                        result = comp1 > comp2;
+                        break;
+                    case "<=":
+                        result = comp1 <= comp2;
+                        break;
+                    case ">=":
+                        result = comp1 >= comp2;
+                        break;
+                    case "==":
+                        result = (comp1 == comp2);
+                        break;
+                    default:
+                        break;
+                }
+                if(result) runFunction(trueCallback);
+                else runFunction(falseCallback);
                 break;
             /*
                 Variable types
              */
             case "int":
                 objects.add(
-                    new JBBFIObject(
-                            new Integer(tokens[2]),
-                            tokens[1]
-                    )
+                        new JBBFIObject(
+                                new Integer(tokens[2]),
+                                tokens[1]
+                        )
                 );
                 break;
             case "double":
@@ -258,7 +293,11 @@ public class JBBFI {
         }
     }
 
-    private JBBFIArg getArgFromString(String argStr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException{
+    private JBBFIArg getArgFromString(String argStr) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, JBBFICompareNotComparable{
+        return getArgFromString(argStr, false);
+    }
+
+    private JBBFIArg getArgFromString(String argStr, boolean primitiveOnly) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, JBBFICompareNotComparable{
         // Is it a primitive
         // Int
         try {
@@ -294,6 +333,8 @@ public class JBBFI {
                 return new JBBFIArg(objKnown.getObject());
             }
         }
+
+        if(primitiveOnly) throw new JBBFICompareNotComparable();
 
         try{
             // Ok ok what if what if its a JBBFI helper class
@@ -345,7 +386,11 @@ public class JBBFI {
             if(funcName.split("\\(")[0].contains(func.getFunctionName())) {
                 for(String s : func.getCommands()){
                     if(allowParseNextLine) {
-                        parseLine(s);
+                        try {
+                            parseLine(s);
+                        } catch (JBBFICompareNotComparable e){
+                            throw new RuntimeException(e);
+                        }
                     }else{
                         // Reset parse condition and finish
                         allowParseNextLine = true;
@@ -360,7 +405,7 @@ public class JBBFI {
 
 
     /**
-       Attempt to stop execution
+     Attempt to stop execution
      */
     public void stop(){
         allowParseNextLine = false;
