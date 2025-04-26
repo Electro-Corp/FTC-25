@@ -1,11 +1,18 @@
 function moveToClipPositionRight
+goto moveToClipPosition
+goto clipThing
+goto grabFromWall
+goto clipThatAgain
+goto pushClipIntoZone
+function_end
+
+function moveToClipPosition
 driveHelper::resetPath()
 arm::pitchSet(0.5645) //0.5735
 arm::setArmPosFast(5300) //5219
 driveHelper::forward(14)
 claw::wristRight()
 me::pause(1200)
-goto clipThing
 function_end
 
 function goBack
@@ -21,10 +28,9 @@ arm::pitchSet(0.5935)
 me::pause(700)
 arm::pitchAppendNeg(0.03)
 arm::setArmPos(0)
-me::pause(1200)
+me::pause(1400)
 claw::openClaw()
 driveHelper::reverse(3.4)
-goto grabFromWall
 function_end
 
 function grabFromWall
@@ -44,28 +50,23 @@ arm::pitchSet(0.5735)
 arm::setArmPosFast(5219)
 driveHelper::turn(90)
 driveHelper::reverseJBBFI(2, 10)
-goto clipThatAgain
 function_end
 
 function clipThatAgain
 driveHelper::forwardJBBFI(16.4, 18)
-arm::pitchSet(0.5685) //0.5935
-me::pause(700)
 arm::pitchSet(0.5935)
 me::pause(500)
 arm::setArmPos(0)
-me::pause(1200)
+me::pause(1400)
 claw::openClaw()
 driveHelper::reverse(3.4)
-goto pushClipIntoZone
 function_end
 
 function pushClipIntoZone
-driveHelper::strafeRight(43)
-driveHelper::forwardJBBFI(37, 50)
-driveHelper::strafeRight(7)
-driveHelper::reverse(40)
-//driveHelper::splineHacked(25, 23, 0)
+driveHelper::strafeRight(41)
+driveHelper::forwardJBBFI(43, 35)
+driveHelper::strafeRight(9)
+driveHelper::reverse(41)
 me::pause(3000)
 function_end
 
@@ -98,15 +99,13 @@ function_end
 
 function placeSecondClip
 claw::wristRight()
-driveHelper::forward(13.2)
-arm::pitchSet(0.2)
-me::pause(700)
+driveHelper::forward(12.9)
 arm::pitchSet(0.17)
+me::pause(300)
 arm::setArmPos(0)
-me::pause(800)
+me::pause(900)
 claw::openClaw()
 driveHelper::reverse(4)
-//goto pushToTape
 function_end
 
 function pushToTape
@@ -225,3 +224,4 @@ function_end
 function clo
 me::close()
 function_end
+
