@@ -173,31 +173,35 @@ public class JBBFI {
 
                 boolean result = false;
                 // Its gon be a double trust me bro
-                double comp1 = Double.parseDouble(getArgFromString(var1, true).getArg().toString());
-                double comp2 = Double.parseDouble(getArgFromString(var2, true).getArg().toString());
+                try{
+                    double comp1 = Double.parseDouble(getArgFromString(var1, true).getArg().toString());
+                    double comp2 = Double.parseDouble(getArgFromString(var2, true).getArg().toString());
 
-
-                switch(comp){
-                    case "<":
-                        result = comp1 < comp2;
-                        break;
-                    case ">":
-                        result = comp1 > comp2;
-                        break;
-                    case "<=":
-                        result = comp1 <= comp2;
-                        break;
-                    case ">=":
-                        result = comp1 >= comp2;
-                        break;
-                    case "==":
-                        result = (comp1 == comp2);
-                        break;
-                    default:
-                        break;
+                    switch(comp){
+                        case "<":
+                            result = comp1 < comp2;
+                            break;
+                        case ">":
+                            result = comp1 > comp2;
+                            break;
+                        case "<=":
+                            result = comp1 <= comp2;
+                            break;
+                        case ">=":
+                            result = comp1 >= comp2;
+                            break;
+                        case "==":
+                            result = comp1 == comp2;
+                            break;
+                        default:
+                            break;
+                    }
+                    if(result) runFunction(trueCallback);
+                    else runFunction(falseCallback);
+                } catch(Exception e){
+                    throw new RuntimeException(e);
                 }
-                if(result) runFunction(trueCallback);
-                else runFunction(falseCallback);
+
                 break;
             /*
                 Variable types
@@ -230,6 +234,11 @@ public class JBBFI {
                 set varName value
              */
             case "set":
+                for(JBBFIObject o : objects) {
+                    if(o.getName().equals(tokens[1])){
+                        o.setObject(getArgFromString(tokens[2]).getArg());
+                    }
+                }
 
                 break;
             /*
@@ -303,7 +312,6 @@ public class JBBFI {
         try {
             Integer intTmp = Integer.parseInt(argStr);
             return new JBBFIArg(intTmp);
-
         }catch (NumberFormatException n){
             // Continue
         }
@@ -311,7 +319,6 @@ public class JBBFI {
         try {
             Double doubleTmp = Double.parseDouble(argStr);
             return new JBBFIArg(doubleTmp);
-
         }catch (NumberFormatException n){
             // Continue
         }
@@ -319,7 +326,6 @@ public class JBBFI {
         try {
             Float floatTmp = Float.parseFloat(argStr);
             return new JBBFIArg(floatTmp);
-
         }catch (NumberFormatException n){
             // Continue
         }
@@ -334,7 +340,44 @@ public class JBBFI {
             }
         }
 
-        if(primitiveOnly) throw new JBBFICompareNotComparable();
+        // Is it a function being called?
+        String[] possible = argStr.split("\\::");
+        boolean found = false;
+        for (JBBFIObject obj:
+                objects) {
+            if(obj.getName().equals(possible[0])){
+                found = true;
+                // Start doing stuff
+                for (int i = 1; i < possible.length; i++) {
+                    String func = possible[i];
+                    // Name of the function
+                    String functionName = func.split("\\(")[0];
+                    // Get the arguments in the "( )"
+                    String argsSTR = func.substring(func.indexOf("(")+1, func.indexOf(")"));
+                    // Isolate args
+                    String[] argList = argsSTR.split("\\,");
+                    // Args
+                    ArrayList<JBBFIArg> args = new ArrayList<>();
+                    for(String argStrNest : argList){
+                        if(argStrNest.isEmpty()) continue;
+                        // Convert to a JBBFIArg
+                        args.add(
+                                getArgFromString(argStrNest)
+                        );
+                    }
+
+                    try {
+                        return new JBBFIArg(obj.executeFunction(functionName, args.toArray(new JBBFIArg[0])));
+                    } catch (Exception e){
+                        // guess not. move on
+                    }
+                }
+
+
+            }
+        }
+
+
 
         try{
             // Ok ok what if what if its a JBBFI helper class
@@ -379,18 +422,14 @@ public class JBBFI {
      * @throws JBBFIInvalidFunctionException
      * @throws JBBFIUnknownKeywordException
      */
-    public int runFunction(String funcName) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    public int runFunction(String funcName) throws JBBFIClassNotFoundException, JBBFIInvalidFunctionException, JBBFIUnknownKeywordException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, JBBFICompareNotComparable {
         funcRunCur = funcName;
         for (JBBFIFunction func:
                 functions) {
             if(funcName.split("\\(")[0].contains(func.getFunctionName())) {
                 for(String s : func.getCommands()){
                     if(allowParseNextLine) {
-                        try {
-                            parseLine(s);
-                        } catch (JBBFICompareNotComparable e){
-                            throw new RuntimeException(e);
-                        }
+                        parseLine(s);
                     }else{
                         // Reset parse condition and finish
                         allowParseNextLine = true;
